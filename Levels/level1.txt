@@ -1,0 +1,4 @@
+type:player position:150,100 size:25,25 angle:0 texturepath:texturepath/path.png
+// Walls
+type:wall position:250,150 size:50,50 angle:0 texturepath:texturepath/path.png
+// End Walls
