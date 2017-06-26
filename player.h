@@ -11,7 +11,11 @@ class Player
 
     sf::CircleShape player;
     sf::Vector2f    position;
-    float           radius;
+    sf::Vector2f    size;
+    sf::Vector2f    pos_A;
+    sf::Vector2f    pos_B;
+    sf::Vector2f    pos_C;
+    sf::Vector2     pos_D;
     sf::Color       color;
     std::string     texturePath;
 
@@ -39,7 +43,10 @@ public:
     void GoDown(bool enable);
 
     sf::Vector2f GetPosition();
+    sf::Vector2f GetSize();
     sf::Vector2f GetVelocity();
+    sf::Vector2f GetPointPosition(const char  point); // A, B, C, D position
+
 };
 
 #endif // PLAYER_H

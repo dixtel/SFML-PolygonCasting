@@ -3,8 +3,8 @@
 Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath) {
     this->position    = position;
     this->texturePath = texturePath;
-    radius            = size.x;
     color             = sf::Color::Green;
+    size              = size;
     force.x           = 2;
     force.y           = 2;
     velocity.x        = 0;
@@ -15,16 +15,23 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     acceleration.y    = 0.5;
     friction          = 0.5;
 
+
     is_colising       = false;
     right             = false;
     left              = false;
     up                = false;
     down              = false;
 
+    pos_A = sf::Vector2f(GetPosition().x, GetPosition.y);
+    pos_B = sf::Vector2f(GetPosition.x + GetSize.x, GetSize.y);
+    pos_C = sf::Vector2f(GetPosition.x, GetPosition.y + GetSize.y);
+    pos_D = sf::Vector2f(GetPosition.x + GetSize.x, GetPosition.y + GetSize.y);
+
     UpdatePlayer();
 }
 
 void Player::UpdatePhysics() {
+    //move
     if(right) {
         velocity.x += force.x * acceleration.x;
     }
@@ -64,9 +71,11 @@ void Player::UpdatePhysics() {
     if(velocity.y > max_velocity.y) velocity.y = max_velocity.y;
     else if(velocity.y < -max_velocity.y) velocity.y = -max_velocity.y;
 
-    std::cout << velocity.x << " " << velocity.y << std::endl;
-
     position += velocity;
+    pos_A = sf::Vector2f(GetPosition().x, GetPosition.y);
+    pos_B = sf::Vector2f(GetPosition.x + GetSize.x, GetSize.y);
+    pos_C = sf::Vector2f(GetPosition.x, GetPosition.y + GetSize.y);
+    pos_D = sf::Vector2f(GetPosition.x + GetSize.x, GetPosition.y + GetSize.y);
 }
 
 void Player::UpdatePlayer() {
@@ -95,6 +104,30 @@ sf::Vector2f Player::GetPosition() {
     return position;
 }
 
+sf::Vector2f Player::GetSize() {
+    return size;
+}
+
 sf::Vector2f Player::GetVelocity() {
     return velocity;
 }
+
+sf::Vector2f Player::GetPointPosition(const char point) {
+    switch (point) {
+    case 'A':
+        return pos_A;
+        break;
+    case 'B':
+        return pos_B;
+        break;
+    case 'C':
+        return pos_C;
+        break;
+    case 'D':
+        return pos_D;
+        break;
+    }
+
+    return sf::Vector2f(0, 0);
+}
+
