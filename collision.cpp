@@ -82,7 +82,7 @@ intersect_propeties GetIntersectPosition(sf::Vector2f A1, sf::Vector2f A2, sf::V
     return result; // No collision
 }
 
-sf::Vector2f FixPlayerPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle, float radius) {
+sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle) {
     sf::Vector2f intersect_position = GetIntersectPosition(old_pos, invalid_pos, start_pos_obstacle, end_pos_obstacle).position;
 
     float distance;
@@ -138,7 +138,6 @@ sf::Vector2f FixPlayerPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, s
         float x = cosine(reverse_angle);
         float y = -sine(reverse_angle);
 
-        intersect_position -= sf::Vector2f(radius, radius);
         intersect_position += sf::Vector2f(x * space, y * space);
 
         new_player_position = intersect_position + (vector * distance);
@@ -151,7 +150,6 @@ sf::Vector2f FixPlayerPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, s
         float x = cosine(reverse_angle);
         float y = -sine(reverse_angle);
 
-        intersect_position -= sf::Vector2f(radius, radius);
         intersect_position += sf::Vector2f(x * space, y * space);
 
         new_player_position = intersect_position + (vector * distance);
@@ -167,7 +165,6 @@ sf::Vector2f FixPlayerPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, s
         float space_x = cosine(reverse_angle);
         float space_y = -sine(reverse_angle);
 
-        intersect_position -= sf::Vector2f(radius, radius);
         intersect_position += sf::Vector2f(space_x * space, space_y * space);
 
         new_player_position = intersect_position + (vector * distance);
@@ -176,56 +173,20 @@ sf::Vector2f FixPlayerPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, s
     return new_player_position;
 }
 
-std::vector <sf::Vector2f> GetPointsOfCorrner(sf::Vector2f corrner_pos, char corrner, float radius) {
-    std::vector <sf::Vector2f> points;
-    sf::CircleShape circle(radius);
-    circle.setPointCount(40);
-    //  0  - 10  = B,
-    //  10 - 20 = D,
-    //  20 - 30 = C,
-    //  30 - 40 = A
-
-    circle.setPosition(corrner_pos);
-
-    if(corrner == 'A') {
-        for(int i = 30; i <= 40; ++i) {
-            points.push_back(circle.getPoint(i));
-        }
-    }
-    else if(corrner == 'B') {
-        for(int i = 0; i <= 10; ++i) {
-            points.push_back(circle.getPoint(i));
-        }
-    }
-    else if(corrner == 'C') {
-        for(int i = 20; i <= 30; ++i) {
-            points.push_back(circle.getPoint(i));
-        }
-    }
-    else if(corrner == 'D') {
-        for(int i = 10; i <= 20; ++i) {
-            points.push_back(circle.getPoint(i));
-        }
-    }
-
-    corrner_pos -= sf::Vector2f(radius, radius);
-
-    for(int i = 0; i < points.size(); i++) {
-        points[i] += corrner_pos;
-    }
-
-    return points;
-}
 
 Collision::Collision() {
 
 }
 
 void Collision::SetCollision(Player *player, std::vector<Wall*> walls) {
-    static sf::Vector2f old_pos_player = player->GetPosition();
-    sf::Vector2f current_pos_player = player->GetPosition();
-
-    float radius = player->radius;
+    static sf::Vector2f old_pos_A = player->GetPointPosition('A');
+    static sf::Vector2f old_pos_B = player->GetPointPosition('B');
+    static sf::Vector2f old_pos_C = player->GetPointPosition('C');
+    static sf::Vector2f old_pos_D = player->GetPointPosition('D');
+    sf::Vector2f current_pos_A = player->GetPointPosition('A');
+    sf::Vector2f current_pos_B = player->GetPointPosition('B');
+    sf::Vector2f current_pos_C = player->GetPointPosition('C');
+    sf::Vector2f current_pos_D = player->GetPointPosition('D');
 
     for(int i = 0; i < walls.size(); ++i) {
         sf::Vector2f wall_pos = walls[i]->wall.getPosition();
@@ -251,218 +212,86 @@ void Collision::SetCollision(Player *player, std::vector<Wall*> walls) {
         sf::Vector2f C = walls[i]->GetPointPosition('C');
         sf::Vector2f D = walls[i]->GetPointPosition('D');
 
+        std::array<sf::Vector2f, 8> linesWall{ C, A,
+                                               A, B,
+                                               B, D,
+                                               D, C };
 
-        //collision 1
+        // A
+        for(int j = 0; j < 8; j+=2) {
+            if(GetIntersectPosition(old_pos_A, current_pos_A, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+                std::cout << "Collision A" << std::endl;
 
-        if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), A + sf::Vector2f(0, -radius), B + sf::Vector2f(0, -radius)).is_intersection) {
-            std::cout << "Collision 1!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+                sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_A, current_pos_A, linesWall.at(j), linesWall.at(j + 1));
+                player->SetPosition(new_position);
 
-            player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), A + sf::Vector2f(0, -radius), B + sf::Vector2f(0, -radius), radius);
-            current_pos_player = player->position;
-        }
-        if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius),B + sf::Vector2f(radius, 0), D + sf::Vector2f(radius, 0)).is_intersection) {
-            std::cout << "Collision 2!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-
-            player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), B + sf::Vector2f(radius, 0), D + sf::Vector2f(radius, 0), radius);
-            current_pos_player = player->position;
-        }
-        if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), D + sf::Vector2f(0, radius), C + sf::Vector2f(0, radius)).is_intersection) {
-            std::cout << "Collision 3!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-
-            player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), C + sf::Vector2f(0, radius), D + sf::Vector2f(0, radius), radius);
-            current_pos_player = player->position;
-        }
-        if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), A + sf::Vector2f(-radius, 0), C + sf::Vector2f(-radius, 0)).is_intersection) {
-            std::cout << "Collision 4!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-
-            player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), A + sf::Vector2f(-radius, 0), C + sf::Vector2f(-radius, 0), radius);
-            current_pos_player = player->position;
+                current_pos_A = player->GetPointPosition('A');
+                current_pos_B = player->GetPointPosition('B');
+                current_pos_C = player->GetPointPosition('C');
+                current_pos_D = player->GetPointPosition('D');
+            }
         }
 
 
-//        std::vector <sf::Vector2f> corrner_A = GetPointsOfCorrner(A, 'A', radius);
-//        std::vector <sf::Vector2f> corrner_B = GetPointsOfCorrner(B, 'B', radius);
-//        std::vector <sf::Vector2f> corrner_C = GetPointsOfCorrner(C, 'C', radius);
-//        std::vector <sf::Vector2f> corrner_D = GetPointsOfCorrner(D, 'D', radius);
+        // B
+        for(int j = 0; j < 8; j+=2) {
+            if(GetIntersectPosition(old_pos_B, current_pos_B, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+                std::cout << "Collision B" << std::endl;
 
-//        for(int i = 0; i < 4; i++) {
-//            std::vector <intersect_propeties> intersection_propeties;
+                sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_B, current_pos_B, linesWall.at(j), linesWall.at(j + 1));
+                new_position -= sf::Vector2f(player->GetSize().x, 0);
 
-//            if(i == 0) {
-//                for(int j = 0; j < corrner_A.size()-1; ++j) {
-//                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_A[j], corrner_A[j+1]).is_intersection) {
-//                        std::cout << "collision corrner A" << std::endl;
+                player->SetPosition(new_position);
 
-//                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_A[j], corrner_A[j+1]));
-//                    }
-//                }
-//            }
-//            if(i == 1) {
-//                for(int j = 0; j < corrner_B.size()-1; ++j) {
-//                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_B[j], corrner_B[j+1]).is_intersection) {
-//                        std::cout << "collision corrner B" << std::endl;
+                current_pos_A = player->GetPointPosition('A');
+                current_pos_B = player->GetPointPosition('B');
+                current_pos_C = player->GetPointPosition('C');
+                current_pos_D = player->GetPointPosition('D');
+            }
+        }
 
-//                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_B[j], corrner_B[j+1]));
-//                    }
-//                }
-//            }
-//            if(i == 2) {
-//                for(int j = 0; j < corrner_C.size()-1; ++j) {
-//                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_C[j], corrner_C[j+1]).is_intersection) {
-//                        std::cout << "collision corrner C" << std::endl;
+        // C
+        for(int j = 0; j < 8; j+=2) {
+            if(GetIntersectPosition(old_pos_C, current_pos_C, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+                std::cout << "Collision C" << std::endl;
 
-//                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_C[j], corrner_C[j+1]));
-//                    }
-//                }
-//            }
-//            if(i == 3) {
-//                for(int j = 0; j < corrner_D.size()-1; ++j) {
-//                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_D[j], corrner_D[j+1]).is_intersection) {
-//                        std::cout << "collision corrner D" << std::endl;
+                sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_C, current_pos_C, linesWall.at(j), linesWall.at(j + 1));
+                new_position -= sf::Vector2f(0, player->GetSize().y);
 
-//                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_D[j], corrner_D[j+1]));
-//                    }
-//                }
-//            }
+                player->SetPosition(new_position);
 
-//            if(intersection_propeties.size() == 1) {
-//                // found position of intersection for corner
-//                sf::Vector2f B1 = intersection_propeties[0].B1;
-//                sf::Vector2f B2 = intersection_propeties[0].B2;
+                current_pos_A = player->GetPointPosition('A');
+                current_pos_B = player->GetPointPosition('B');
+                current_pos_C = player->GetPointPosition('C');
+                current_pos_D = player->GetPointPosition('D');
+            }
+        }
 
-//                player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), B1, B2, radius);
-//                current_pos_player = player->position;
-//                break;
-//            }
-//            else if(intersection_propeties.size() > 1) {
-//                std::cout << "tessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" << std::endl;
-//                // find the nearest position of intersect
-//                intersect_propeties nearest_intersection = intersection_propeties[0];
+        // D
+        for(int j = 0; j < 8; j+=2) {
+            if(GetIntersectPosition(old_pos_D, current_pos_D, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+                std::cout << "Collision D" << std::endl;
 
-//                for (int j = 1; j < intersection_propeties.size(); ++j) {
-//                    sf::Vector2f distance_this_case = old_pos_player - intersection_propeties[i].position;
-//                    distance_this_case.x = fabs(distance_this_case.x);
-//                    distance_this_case.y = fabs(distance_this_case.y);
+                sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_D, current_pos_D, linesWall.at(j), linesWall.at(j + 1));
+                new_position -= sf::Vector2f(player->GetSize().x, player->GetSize().y);
 
-//                    sf::Vector2f distance_nearest = old_pos_player - nearest_intersection.position;
-//                    distance_nearest.x = fabs(distance_nearest.x);
-//                    distance_nearest.y = fabs(distance_nearest.y);
+                player->SetPosition(new_position);
 
-//                    float hypotenuse_this_case = sqrt(pow(distance_this_case.x, 2) + pow(distance_this_case.y, 2));
-//                    float hypotenuse_nearest = sqrt(pow(distance_nearest.x, 2) + pow(distance_nearest.y, 2));
-
-//                    if(hypotenuse_this_case > hypotenuse_nearest) nearest_intersection = intersection_propeties[j];
-
-//                }
-
-//                // intersection is "nearest_intersection"`
-//                sf::Vector2f B1 = nearest_intersection.B1;
-//                sf::Vector2f B2 = nearest_intersection.B2;
-
-//                player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), B1, B2, radius);
-//                current_pos_player = player->position;
-//                break;
-//            }
-
-//        }
+                current_pos_A = player->GetPointPosition('A');
+                current_pos_B = player->GetPointPosition('B');
+                current_pos_C = player->GetPointPosition('C');
+                current_pos_D = player->GetPointPosition('D');
+            }
+        }
 
     }
 
-    for(int i = 0; i < walls.size(); ++i) {
-        sf::Vector2f A = walls[i]->GetPointPosition('A');
-        sf::Vector2f B = walls[i]->GetPointPosition('B');
-        sf::Vector2f C = walls[i]->GetPointPosition('C');
-        sf::Vector2f D = walls[i]->GetPointPosition('D');
-
-        std::vector <sf::Vector2f> corrner_A = GetPointsOfCorrner(A, 'A', radius);
-        std::vector <sf::Vector2f> corrner_B = GetPointsOfCorrner(B, 'B', radius);
-        std::vector <sf::Vector2f> corrner_C = GetPointsOfCorrner(C, 'C', radius);
-        std::vector <sf::Vector2f> corrner_D = GetPointsOfCorrner(D, 'D', radius);
-
-        for(int i = 0; i < 4; i++) {
-            std::vector <intersect_propeties> intersection_propeties;
-
-            if(i == 0) {
-                for(int j = 0; j < corrner_A.size()-1; ++j) {
-                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_A[j], corrner_A[j+1]).is_intersection) {
-                        std::cout << "collision corrner A" << std::endl;
-
-                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_A[j], corrner_A[j+1]));
-                    }
-                }
-            }
-            if(i == 1) {
-                for(int j = 0; j < corrner_B.size()-1; ++j) {
-                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_B[j], corrner_B[j+1]).is_intersection) {
-                        std::cout << "collision corrner B" << std::endl;
-
-                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_B[j], corrner_B[j+1]));
-                    }
-                }
-            }
-            if(i == 2) {
-                for(int j = 0; j < corrner_C.size()-1; ++j) {
-                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_C[j], corrner_C[j+1]).is_intersection) {
-                        std::cout << "collision corrner C" << std::endl;
-
-                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_C[j], corrner_C[j+1]));
-                    }
-                }
-            }
-            if(i == 3) {
-                for(int j = 0; j < corrner_D.size()-1; ++j) {
-                    if(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_D[j], corrner_D[j+1]).is_intersection) {
-                        std::cout << "collision corrner D" << std::endl;
-
-                        intersection_propeties.push_back(GetIntersectPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), corrner_D[j], corrner_D[j+1]));
-                    }
-                }
-            }
-
-            if(intersection_propeties.size() == 1) {
-                // found position of intersection for corner
-                sf::Vector2f B1 = intersection_propeties[0].B1;
-                sf::Vector2f B2 = intersection_propeties[0].B2;
-
-                player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), B1, B2, radius);
-                current_pos_player = player->position;
-                break;
-            }
-            else if(intersection_propeties.size() > 1) {
-                std::cout << "tessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" << std::endl;
-                // find the nearest position of intersect
-                intersect_propeties nearest_intersection = intersection_propeties[0];
-
-                for (int j = 1; j < intersection_propeties.size(); ++j) {
-                    sf::Vector2f distance_this_case = old_pos_player - intersection_propeties[i].position;
-                    distance_this_case.x = fabs(distance_this_case.x);
-                    distance_this_case.y = fabs(distance_this_case.y);
-
-                    sf::Vector2f distance_nearest = old_pos_player - nearest_intersection.position;
-                    distance_nearest.x = fabs(distance_nearest.x);
-                    distance_nearest.y = fabs(distance_nearest.y);
-
-                    float hypotenuse_this_case = sqrt(pow(distance_this_case.x, 2) + pow(distance_this_case.y, 2));
-                    float hypotenuse_nearest = sqrt(pow(distance_nearest.x, 2) + pow(distance_nearest.y, 2));
-
-                    if(hypotenuse_this_case > hypotenuse_nearest) nearest_intersection = intersection_propeties[j];
-
-                }
-
-                // intersection is "nearest_intersection"`
-                sf::Vector2f B1 = nearest_intersection.B1;
-                sf::Vector2f B2 = nearest_intersection.B2;
-
-                player->position = FixPlayerPosition(old_pos_player + sf::Vector2f(radius, radius), current_pos_player + sf::Vector2f(radius, radius), B1, B2, radius);
-                current_pos_player = player->position;
-                break;
-            }
-
-        }
-    }
     //std::cout << old_pos_player.x << " " << old_pos_player.y << " - " << current_pos_player.x << " " << current_pos_player.y << std::endl;
 
-    old_pos_player = current_pos_player;
+    old_pos_A = current_pos_A;
+    old_pos_B = current_pos_B;
+    old_pos_C = current_pos_C;
+    old_pos_D = current_pos_D;
 }
 
 

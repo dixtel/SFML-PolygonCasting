@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <iostream>
 
 class Player
@@ -9,27 +9,30 @@ class Player
     friend class Render;
     friend class Collision;
 
-    sf::CircleShape player;
-    sf::Vector2f    position;
-    sf::Vector2f    size;
-    sf::Vector2f    pos_A;
-    sf::Vector2f    pos_B;
-    sf::Vector2f    pos_C;
-    sf::Vector2     pos_D;
-    sf::Color       color;
-    std::string     texturePath;
+    sf::RectangleShape player;
+    sf::Vector2f       position;
+    sf::Vector2f       size;
+    sf::Vector2f       pos_A;
+    sf::Vector2f       pos_B;
+    sf::Vector2f       pos_C;
+    sf::Vector2f       pos_D;
+    sf::Color          color;
+    std::string        texturePath;
 
-    sf::Vector2f    force;
-    sf::Vector2f    velocity;
-    sf::Vector2f    max_velocity;
-    sf::Vector2f    acceleration;
-    float           friction;
+    sf::Vector2f       force;
+    sf::Vector2f       velocity;
+    sf::Vector2f       max_velocity;
+    sf::Vector2f       acceleration;
+    float              friction;
 
-    bool            is_colising;
-    bool            right;
-    bool            left;
-    bool            up;
-    bool            down;
+    bool               is_colising;
+    bool               right;
+    bool               left;
+    bool               up;
+    bool               down;
+
+    void SetPosition(sf::Vector2f pos);
+    void UpdatePoints();
 
 public:
     Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath);

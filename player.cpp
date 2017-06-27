@@ -3,8 +3,8 @@
 Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath) {
     this->position    = position;
     this->texturePath = texturePath;
+    this->size        = size;
     color             = sf::Color::Green;
-    size              = size;
     force.x           = 2;
     force.y           = 2;
     velocity.x        = 0;
@@ -22,12 +22,20 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     up                = false;
     down              = false;
 
-    pos_A = sf::Vector2f(GetPosition().x, GetPosition.y);
-    pos_B = sf::Vector2f(GetPosition.x + GetSize.x, GetSize.y);
-    pos_C = sf::Vector2f(GetPosition.x, GetPosition.y + GetSize.y);
-    pos_D = sf::Vector2f(GetPosition.x + GetSize.x, GetPosition.y + GetSize.y);
-
+    UpdatePoints();
     UpdatePlayer();
+}
+
+void Player::SetPosition(sf::Vector2f pos) {
+    position = pos;
+    UpdatePoints();
+}
+
+void Player::UpdatePoints() {
+    pos_A = sf::Vector2f(GetPosition().x, GetPosition().y);
+    pos_B = sf::Vector2f(GetPosition().x + GetSize().x, GetPosition().y);
+    pos_C = sf::Vector2f(GetPosition().x, GetPosition().y + GetSize().y);
+    pos_D = sf::Vector2f(GetPosition().x + GetSize().x, GetPosition().y + GetSize().y);
 }
 
 void Player::UpdatePhysics() {
@@ -72,15 +80,12 @@ void Player::UpdatePhysics() {
     else if(velocity.y < -max_velocity.y) velocity.y = -max_velocity.y;
 
     position += velocity;
-    pos_A = sf::Vector2f(GetPosition().x, GetPosition.y);
-    pos_B = sf::Vector2f(GetPosition.x + GetSize.x, GetSize.y);
-    pos_C = sf::Vector2f(GetPosition.x, GetPosition.y + GetSize.y);
-    pos_D = sf::Vector2f(GetPosition.x + GetSize.x, GetPosition.y + GetSize.y);
+    UpdatePoints();
 }
 
 void Player::UpdatePlayer() {
+    player.setSize(size);
     player.setPosition(position);
-    player.setRadius(radius);
     player.setFillColor(color);
 }
 

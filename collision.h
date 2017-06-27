@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <math.h>
-#include <assert.h>
+#include <array>
 
 class Collision
 {
