@@ -33,7 +33,6 @@ void Game::StartGameLoop() {
     }
     world->InitGameObjects(gameObject);
 
-
     sf::Font font;
     if(!font.loadFromFile("font.ttf")) {
         std::cout << "error load font ;/" << std::endl;
@@ -48,6 +47,9 @@ void Game::StartGameLoop() {
 
     sf::Clock clock;
     float lastTime = 0;
+
+    sf::View minimap(render->GetDefaultView());
+    minimap.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
 
     while(game_loop) {
 
@@ -103,9 +105,13 @@ void Game::StartGameLoop() {
                                 " vy:" + std::to_string(gameObject->GetPlayer()->GetVelocity().y));
 
 
+        minimap.setCenter(gameObject->GetPlayer()->GetPosition());
+
         render->Clear();
+        render->SetView(minimap);
         render->Draw(gameObject->GetPlayer());
         render->Draw(gameObject->GetWalls());
+        render->ResetViev();
         render->Draw(text_debugger);
         render->Display();
 

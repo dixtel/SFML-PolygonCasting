@@ -12,8 +12,17 @@ Render::~Render() {
     }
 }
 
+sf::View Render::GetDefaultView() {
+    return window->getDefaultView();
+}
+
 bool Render::GetEvent(sf::Event *event) {
     return window->pollEvent(*event);
+}
+
+void Render::ResetViev() {
+    sf::View view = window->getDefaultView();
+    window->setView(view);
 }
 
 void Render::Close() {
@@ -36,6 +45,10 @@ void Render::Draw(std::vector <Wall*> walls) {
 
 void Render::Draw(sf::Text text) {
     window->draw(text);
+}
+
+void Render::SetView(sf::View view) {
+    window->setView(view);
 }
 
 void Render::Display() {

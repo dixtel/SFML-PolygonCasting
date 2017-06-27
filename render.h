@@ -14,7 +14,10 @@ public:
     Render(int width, int height, std::string title, int fps);
     ~Render();
 
+    sf::View GetDefaultView();
     bool GetEvent(sf::Event *event);
+    void ResetViev();
+    void SetView(sf::View view);
     void Close();
     void Clear();
     void Draw(Player *player);
