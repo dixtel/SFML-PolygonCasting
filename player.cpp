@@ -122,6 +122,10 @@ void Player::GoDown(bool enable) {
     down = enable;
 }
 
+float Player::GetDirection() {
+    return direction;
+}
+
 sf::Vector2f Player::GetPosition() {
     return position;
 }

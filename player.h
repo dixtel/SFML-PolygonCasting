@@ -48,6 +48,7 @@ class Player {
     void GoUp(bool enable);
     void GoDown(bool enable);
 
+    float        GetDirection();
     sf::Vector2f GetPosition();
     sf::Vector2f GetSize();
     sf::Vector2f GetVelocity();
