@@ -3,15 +3,16 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <iostream>
+#include <cmath>
 
-class Player
-{
+class Player {
     friend class Render;
     friend class Collision;
 
     sf::RectangleShape player;
     sf::Vector2f       position;
     sf::Vector2f       size;
+    float              direction;
     sf::Vector2f       pos_A;
     sf::Vector2f       pos_B;
     sf::Vector2f       pos_C;
@@ -34,12 +35,14 @@ class Player
     void SetPosition(sf::Vector2f pos);
     void UpdatePoints();
 
-public:
+    public:
     Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath);
 
     void UpdatePhysics();
     void UpdatePlayer();
 
+    void GoDirectionRight(float moveLenght);
+    void GoDirectionLeft(bool moveLenght);
     void GoRight(bool enable);
     void GoLeft(bool enable);
     void GoUp(bool enable);

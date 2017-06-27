@@ -26,7 +26,7 @@ Game::~Game() {
     }
 }
 
-void Game::StartGameLoop() {
+void Game::StartGameLoop() { 
     world->LoadMap("Levels/level1.txt");
     if(!world->isLoad()) {
         return;
@@ -50,6 +50,8 @@ void Game::StartGameLoop() {
 
     sf::View minimap(render->GetDefaultView());
     minimap.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
+
+    sf::Mouse mouse;
 
     while(game_loop) {
 
@@ -88,6 +90,23 @@ void Game::StartGameLoop() {
                 gameObject->GetPlayer()->GoDown(false);
             }
         }
+
+
+        static float old_mouse_x = mouse.getPosition().x;
+        float new_mouse_x = mouse.getPosition().x;
+        if(old_mouse_x != new_mouse_x) {
+            float mouse_move = new_mouse_x - old_mouse_x;
+            if(mouse_move > 0) {
+                mouse_move = fabs(mouse_move) / 60;
+                gameObject->GetPlayer()->GoDirectionRight(mouse_move);
+            }
+            else {
+                mouse_move = fabs(mouse_move) / 60;
+                gameObject->GetPlayer()->GoDirectionLeft(mouse_move);
+
+            }
+        }
+        old_mouse_x = new_mouse_x;
 
         gameObject->GetPlayer()->UpdatePhysics();
 

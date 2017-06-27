@@ -4,6 +4,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     this->position    = position;
     this->texturePath = texturePath;
     this->size        = size;
+    direction         = 90;
     color             = sf::Color::Green;
     force.x           = 2;
     force.y           = 2;
@@ -81,12 +82,28 @@ void Player::UpdatePhysics() {
 
     position += velocity;
     UpdatePoints();
+
+    std::cout << direction << std::endl;
 }
 
 void Player::UpdatePlayer() {
     player.setSize(size);
     player.setPosition(position);
     player.setFillColor(color);
+}
+
+void Player::GoDirectionRight(float moveLenght) {
+    direction -= moveLenght;
+    if(direction < 0) {
+        direction = 360 + fmod(direction, 360);
+    }
+}
+
+void Player::GoDirectionLeft(bool moveLenght) {
+    direction += moveLenght;
+    if(direction > 369) {
+        direction = fmod(direction, 360);
+    }
 }
 
 void Player::GoRight(bool enable) {

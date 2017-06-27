@@ -5,7 +5,7 @@
 #include <string>
 
 class Wall
-{    
+{
     friend class Render;
     friend class Collision;
 

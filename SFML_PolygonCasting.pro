@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     world.cpp \
     wall.cpp \
     test.cpp \
-    collision.cpp
+    collision.cpp \
+    polygoncast.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -34,4 +35,5 @@ HEADERS += \
     render.h \
     world.h \
     wall.h \
-    collision.h
+    collision.h \
+    polygoncast.h
