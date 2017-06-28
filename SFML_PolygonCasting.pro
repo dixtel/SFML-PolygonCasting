@@ -13,7 +13,6 @@ SOURCES += main.cpp \
     render.cpp \
     world.cpp \
     wall.cpp \
-    test.cpp \
     collision.cpp \
     polygoncast.cpp \
     toolkit.cpp
@@ -37,4 +36,5 @@ HEADERS += \
     world.h \
     wall.h \
     collision.h \
-    polygoncast.h
+    polygoncast.h \
+    toolkit.h

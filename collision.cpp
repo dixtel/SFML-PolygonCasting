@@ -1,6 +1,4 @@
 #include "collision.h"
-#include "toolkit.cpp"
-
 
 sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle) {
     sf::Vector2f intersect_position = ToolKit::GetIntersectPosition(old_pos, invalid_pos, start_pos_obstacle, end_pos_obstacle).position;
@@ -21,6 +19,7 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
 
     float angleA1 = ToolKit::GetAngle(end_pos_obstacle, start_pos_obstacle);
     float angleA2 = ToolKit::GetAngle(start_pos_obstacle, end_pos_obstacle);
+
 
     if(angleA1 > angleA2) {
         float tmp = angleA2;

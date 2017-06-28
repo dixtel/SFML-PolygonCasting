@@ -2,6 +2,7 @@
 #define COLLISION_H
 
 #include "gameobject.h"
+#include "toolkit.h"
 #include <vector>
 #include <iostream>
 #include <math.h>
