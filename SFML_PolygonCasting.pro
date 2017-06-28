@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     wall.cpp \
     test.cpp \
     collision.cpp \
-    polygoncast.cpp
+    polygoncast.cpp \
+    toolkit.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
