@@ -1,7 +1,9 @@
 #my files
-.autosave
-.pro.user
-.pri
+*.h.autosave
+*.cpp.autosave
+*.pro.user
+*.pro
+*.pri
 
 # Prerequisites
 *.d
