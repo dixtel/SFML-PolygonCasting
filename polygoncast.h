@@ -12,10 +12,12 @@ class PolygonCast
     float angleView;
     float distanceView;
 
-
     std::vector <Wall*> GetWallsOnPlayerView(sf::Vector2f player_pos, float player_dir, std::vector <Wall*> walls);
 public:
-    PolygonCast(float angleView, float distanceView);
+    PolygonCast();
+
+    void SetAngleView(float angle);
+    void SetDistanceView(float distance);
 
     std::vector <sf::VertexArray> GetView(Player *player, std::vector <Wall*> walls);
 };

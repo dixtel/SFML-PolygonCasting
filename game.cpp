@@ -5,6 +5,7 @@ Game::Game() {
     gameObject = new GameObject();
     world      = new World();
     collision  = new Collision();
+    polygonCast = new PolygonCast();
 }
 
 Game::~Game() {
@@ -32,6 +33,9 @@ void Game::StartGameLoop() {
         return;
     }
     world->InitGameObjects(gameObject);
+
+    polygonCast->SetAngleView(gameObject->GetPlayer()->GetAngleView());
+    polygonCast->SetDistanceView(gameObject->GetPlayer()->GetDistanceView());
 
     sf::Font font;
     if(!font.loadFromFile("font.ttf")) {

@@ -5,6 +5,8 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     this->texturePath = texturePath;
     this->size        = size;
     direction         = 90;
+    angleView         = 70;
+    distanceView      = 100;
     color             = sf::Color::Green;
     force.x           = 2;
     force.y           = 2;
@@ -15,8 +17,6 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     acceleration.x    = 0.5;
     acceleration.y    = 0.5;
     friction          = 0.5;
-
-
     is_colising       = false;
     right             = false;
     left              = false;
@@ -120,6 +120,14 @@ void Player::GoUp(bool enable) {
 
 void Player::GoDown(bool enable) {
     down = enable;
+}
+
+float Player::GetAngleView() {
+    return angleView;
+}
+
+float Player::GetDistanceView() {
+    return distanceView;
 }
 
 float Player::GetDirection() {

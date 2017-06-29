@@ -13,6 +13,8 @@ class Player {
     sf::Vector2f       position;
     sf::Vector2f       size;
     float              direction;
+    float              angleView;
+    float              distanceView;
     sf::Vector2f       pos_A;
     sf::Vector2f       pos_B;
     sf::Vector2f       pos_C;
@@ -48,6 +50,8 @@ class Player {
     void GoUp(bool enable);
     void GoDown(bool enable);
 
+    float        GetAngleView();
+    float        GetDistanceView();
     float        GetDirection();
     sf::Vector2f GetPosition();
     sf::Vector2f GetSize();
