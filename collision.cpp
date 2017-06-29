@@ -20,7 +20,6 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     float angleA1 = ToolKit::GetAngle(end_pos_obstacle, start_pos_obstacle);
     float angleA2 = ToolKit::GetAngle(start_pos_obstacle, end_pos_obstacle);
 
-
     if(angleA1 > angleA2) {
         float tmp = angleA2;
         angleA2 = angleA1;
