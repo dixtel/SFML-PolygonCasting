@@ -101,11 +101,11 @@ void Game::StartGameLoop() {
         if(old_mouse_x != new_mouse_x) {
             float mouse_move = new_mouse_x - old_mouse_x;
             if(mouse_move > 0) {
-                mouse_move = fabs(mouse_move) / 60;
+                mouse_move = fabs(mouse_move) / 5;
                 gameObject->GetPlayer()->GoDirectionRight(mouse_move);
             }
             else {
-                mouse_move = fabs(mouse_move) / 60;
+                mouse_move = fabs(mouse_move) / 5;
                 gameObject->GetPlayer()->GoDirectionLeft(mouse_move);
 
             }
@@ -128,10 +128,15 @@ void Game::StartGameLoop() {
                                 " vy:" + std::to_string(gameObject->GetPlayer()->GetVelocity().y));
 
 
+
         minimap.setCenter(gameObject->GetPlayer()->GetPosition());
 
+
+        polygonCast->GetView(gameObject->GetPlayer(), gameObject->GetWalls());
+
         render->Clear();
-        render->SetView(minimap);
+        //render->SetView(minimap);
+        render->Draw(gameObject->GetPlayer()->GetPlayerView());
         render->Draw(gameObject->GetPlayer());
         render->Draw(gameObject->GetWalls());
         render->ResetViev();

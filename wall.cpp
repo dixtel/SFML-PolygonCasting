@@ -16,7 +16,7 @@ void Wall::Update() {
     wall.setFillColor(color);
     wall.setRotation(angle);
 
-    float space = 0.2;
+    float space = 0;
     pos_A = sf::Vector2f(wall.getPosition().x+space, wall.getPosition().y+space);
     pos_B = sf::Vector2f(wall.getPosition().x + wall.getSize().x-space, wall.getPosition().y+space);
     pos_C = sf::Vector2f(wall.getPosition().x+space, wall.getPosition().y + wall.getSize().y-space);

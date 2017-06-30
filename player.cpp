@@ -6,7 +6,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     this->size        = size;
     direction         = 90;
     angleView         = 70;
-    distanceView      = 100;
+    distanceView      = 400;
     color             = sf::Color::Green;
     force.x           = 2;
     force.y           = 2;
@@ -99,9 +99,9 @@ void Player::GoDirectionRight(float moveLenght) {
     }
 }
 
-void Player::GoDirectionLeft(bool moveLenght) {
+void Player::GoDirectionLeft(float moveLenght) {
     direction += moveLenght;
-    if(direction > 369) {
+    if(direction > 360) {
         direction = fmod(direction, 360);
     }
 }
@@ -164,4 +164,18 @@ sf::Vector2f Player::GetPointPosition(const char point) {
 
     return sf::Vector2f(0, 0);
 }
+
+sf::ConvexShape Player::GetPlayerView() {
+    sf::Vector2f player_center_pos = sf::Vector2f(position.x + (size.x/2), position.y + (size.y/2));
+
+    sf::ConvexShape view;
+    view.setFillColor(sf::Color(255, 255, 255, 100));
+    view.setPointCount(3);
+    view.setPoint(0, player_center_pos);
+    view.setPoint(1, sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((direction + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((direction + (angleView/2)), 360)) * distanceView)));
+    view.setPoint(2, sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((direction - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((direction - (angleView/2)), 360)) * distanceView)));
+
+    return view;
+}
+
 

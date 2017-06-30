@@ -47,6 +47,10 @@ void Render::Draw(sf::Text text) {
     window->draw(text);
 }
 
+void Render::Draw(sf::ConvexShape object) {
+    window->draw(object);
+}
+
 void Render::SetView(sf::View view) {
     window->setView(view);
 }

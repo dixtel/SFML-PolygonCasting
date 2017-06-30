@@ -1,7 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics.hpp>
+#include "toolkit.h"
 #include <iostream>
 #include <cmath>
 
@@ -44,7 +45,7 @@ class Player {
     void UpdatePlayer();
 
     void GoDirectionRight(float moveLenght);
-    void GoDirectionLeft(bool moveLenght);
+    void GoDirectionLeft(float moveLenght);
     void GoRight(bool enable);
     void GoLeft(bool enable);
     void GoUp(bool enable);
@@ -58,6 +59,7 @@ class Player {
     sf::Vector2f GetVelocity();
     sf::Vector2f GetPointPosition(const char  point); // A, B, C, D position
 
+    sf::ConvexShape GetPlayerView();
 };
 
 #endif // PLAYER_H

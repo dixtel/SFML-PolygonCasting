@@ -23,6 +23,7 @@ public:
     void Draw(Player *player);
     void Draw(std::vector <Wall*> walls);
     void Draw(sf::Text text);
+    void Draw(sf::ConvexShape object);
     void Display();
 };
 
