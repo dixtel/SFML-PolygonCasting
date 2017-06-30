@@ -11,7 +11,7 @@ std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(sf::Vector2f player_center
     viewTriangle.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView)));
 
     sf::Vector2f centerTriangle;
-    centerTriangle = sf::Vector2f(player_center_pos.x + ToolKit::cosine(player_dir) * (distanceView/2), player_center_pos.y + ToolKit::sine(player_dir) * (distanceView/2));
+    centerTriangle = sf::Vector2f(player_center_pos.x + ToolKit::cosine(player_dir) * (distanceView/2), player_center_pos.y + (-ToolKit::sine(player_dir)) * (distanceView/2));
 
     std::vector <Wall*> viewWalls;
 
@@ -22,23 +22,23 @@ std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(sf::Vector2f player_center
         wallPoints.push_back(walls[i]->GetPointPosition('C'));
         wallPoints.push_back(walls[i]->GetPointPosition('D'));
 
-        bool isIntersection = false;
+        bool wallPointIntersection = true;
 
         for(int j = 0; j < 4; ++j) {
            sf::Vector2f wallPoint = wallPoints[j];
 
-           for(int k = 0; k < 4; ++k) {
-               sf::Vector2f trianglePoint1 = viewTriangle[k];
-               sf::Vector2f trianglePoint2 = viewTriangle[(k+1)%3];
-
-               if(ToolKit::GetIntersectPosition(trianglePoint1, trianglePoint2, centerTriangle, wallPoint).is_intersection) {
-                   isIntersection = true;
-               }
+           if(!ToolKit::GetIntersectPosition(viewTriangle[0], viewTriangle[1], centerTriangle, wallPoint).is_intersection &&
+              !ToolKit::GetIntersectPosition(viewTriangle[1], viewTriangle[2], centerTriangle, wallPoint).is_intersection &&
+              !ToolKit::GetIntersectPosition(viewTriangle[2], viewTriangle[0], centerTriangle, wallPoint).is_intersection) {
+               wallPointIntersection = false;
+               break;
            }
-
         }
 
-        if(isIntersection) viewWalls.push_back(walls[i]);
+        if(!wallPointIntersection) {
+            viewWalls.push_back(walls[i]);
+        }
+
     }
 
     return viewWalls;
