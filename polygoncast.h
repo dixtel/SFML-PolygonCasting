@@ -50,6 +50,7 @@ class PolygonCast
     };
 
     std::vector <Wall*> GetWallsOnPlayerView(sf::Vector2f player_center_pos, float player_dir, std::vector <Wall*> walls);
+    std::vector <Surface*> RayCast(std::vector <Wall*> walls, );
 public:
     PolygonCast();
 

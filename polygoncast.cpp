@@ -65,6 +65,9 @@ std::vector <PolygonCast::Surface*> PolygonCast::GetView(Player *player, std::ve
 
 
     std::vector <Wall*> viewWalls = GetWallsOnPlayerView(player_center_pos, player_dir, walls);
+
+
+
     std::cout << "size view: " << viewWalls.size() << std::endl;
 
 
