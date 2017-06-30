@@ -52,10 +52,10 @@ void PolygonCast::SetDistanceView(float distance) {
     distanceView = distance;
 }
 
-std::vector <sf::VertexArray> PolygonCast::GetView(Player *player, std::vector <Wall*> walls) {
+std::vector <PolygonCast::Surface*> PolygonCast::GetView(Player *player, std::vector <Wall*> walls) {
     if((angleView == 0) && (distanceView == 0)) {
         std::cout << "error: angle and distance for view are not init (PolygonCast)" << std::endl;
-        return std::vector <sf::VertexArray> {};
+        return std::vector <PolygonCast::Surface*>  {};
     }
 
 
@@ -68,6 +68,6 @@ std::vector <sf::VertexArray> PolygonCast::GetView(Player *player, std::vector <
     std::cout << "size view: " << viewWalls.size() << std::endl;
 
 
-    return std::vector <sf::VertexArray> {};
+    return std::vector <PolygonCast::Surface*>  {};
 }
 

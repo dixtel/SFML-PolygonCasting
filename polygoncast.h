@@ -44,7 +44,7 @@ class PolygonCast
             return polygon;
         }
 
-        sf::Texture GetRenderState() {
+        sf::RenderStates GetRenderState() {
             return state;
         }
     };
@@ -56,7 +56,7 @@ public:
     void SetAngleView(float angle);
     void SetDistanceView(float distance);
 
-    std::vector <sf::VertexArray> GetView(Player *player, std::vector <Wall*> walls);
+    std::vector <Surface*> GetView(Player *player, std::vector <Wall*> walls);
 };
 
 #endif // POLYGONCAST_H
