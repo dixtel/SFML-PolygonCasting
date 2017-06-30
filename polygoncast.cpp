@@ -66,6 +66,8 @@ std::vector <sf::VertexArray> PolygonCast::GetView(Player *player, std::vector <
 
     std::vector <Wall*> viewWalls = GetWallsOnPlayerView(player_center_pos, player_dir, walls);
     std::cout << "size view: " << viewWalls.size() << std::endl;
+
+
     return std::vector <sf::VertexArray> {};
 }
 
