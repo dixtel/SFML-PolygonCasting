@@ -38,6 +38,8 @@ float ToolKit::sine(float degree) {
     return std::sin(degree * PI / 180);
 }
 
+//TODO change function GetIntersectPosition to GetIntersect
+
 ToolKit::intersect_propeties ToolKit::GetIntersectPosition(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2) {
     intersect_propeties result;
     sf::Vector2f s1, s2;

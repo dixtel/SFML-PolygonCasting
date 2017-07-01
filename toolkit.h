@@ -15,6 +15,11 @@ namespace ToolKit {
         sf::Vector2f B2;
     } intersect_propeties;
 
+    typedef struct {
+        sf::Vector2f A;
+        sf::Vector2f B;
+    } Vector2f_pair;
+
 
     float GetAngle(sf::Vector2f start, sf::Vector2f end);
 

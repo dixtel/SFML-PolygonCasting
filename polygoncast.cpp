@@ -4,7 +4,15 @@
 PolygonCast::PolygonCast() {
 }
 
-std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(sf::Vector2f player_center_pos, float player_dir, std::vector <Wall*> walls) {
+void PolygonCast::ClearSurfaces() {
+    for (std::vector<Surface*>::iterator it = surfaces.begin(); it != surfaces.end(); it++) {
+        delete (*it);
+    }
+
+    surfaces.clear();
+}
+
+std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(std::vector <Wall*> walls) {
     std::vector <sf::Vector2f> viewTriangle;
     viewTriangle.push_back(player_center_pos);
     viewTriangle.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView)));
@@ -44,6 +52,27 @@ std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(sf::Vector2f player_center
     return viewWalls;
 }
 
+void PolygonCast::CreateSurfaces(std::vector <Wall*> *walls) {
+    ClearSurfaces();
+
+    std::vector <Wall*> walls_on_views = GetWallsOnPlayerView((*walls));
+
+    const int number_ray = angleView * 2; // 2 to more detalid
+    const int angle_space = 1 / number_ray;
+    float angle = player_dir - (angleView / 2);
+
+
+
+
+
+
+
+    for(int i = 0; i < number_ray; ++i) {        
+
+        angle += angle_space;
+    }
+}
+
 void PolygonCast::SetAngleView(float angle) {
     angleView = angle;
 }
@@ -52,25 +81,11 @@ void PolygonCast::SetDistanceView(float distance) {
     distanceView = distance;
 }
 
-std::vector <PolygonCast::Surface*> PolygonCast::GetView(Player *player, std::vector <Wall*> walls) {
-    if((angleView == 0) && (distanceView == 0)) {
-        std::cout << "error: angle and distance for view are not init (PolygonCast)" << std::endl;
-        return std::vector <PolygonCast::Surface*>  {};
-    }
+void PolygonCast::CreateView(Player *player, std::vector<Wall*> *walls) {
+    player_dir = player->GetDirection();
+    player_pos = player->GetPosition();
+    player_center_pos = sf::Vector2f(player_pos.x + (player->GetSize().x/2), player_pos.y + (player->GetSize().y/2));
 
-
-    float player_dir = player->GetDirection();
-    sf::Vector2f player_pos = player->GetPosition();
-    sf::Vector2f player_center_pos = sf::Vector2f(player_pos.x + (player->GetSize().x/2), player_pos.y + (player->GetSize().y/2));
-
-
-    std::vector <Wall*> viewWalls = GetWallsOnPlayerView(player_center_pos, player_dir, walls);
-
-
-
-    std::cout << "size view: " << viewWalls.size() << std::endl;
-
-
-    return std::vector <PolygonCast::Surface*>  {};
+    CreateSurfaces(walls);
 }
 

@@ -132,7 +132,7 @@ void Game::StartGameLoop() {
         minimap.setCenter(gameObject->GetPlayer()->GetPosition());
 
 
-        polygonCast->GetView(gameObject->GetPlayer(), gameObject->GetWalls());
+        polygonCast->CreateView(gameObject->GetPlayer(), gameObject->GetWalls());
 
         render->Clear();
         //render->SetView(minimap);
