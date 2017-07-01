@@ -7,8 +7,8 @@
 
 class GameObject
 {
-    Player             *player;
-    std::vector <Wall*> walls;
+    Player             player;
+    std::vector <Wall> walls;
 public:
     GameObject();
     ~GameObject();
@@ -18,8 +18,8 @@ public:
     void CreateWall(sf::Vector2f position, sf::Vector2f size, float angle, std::string texturePath);
 
     //get
-    Player *GetPlayer();
-    std::vector <Wall*> GetWalls();
+    Player &GetPlayer();
+    std::vector <Wall> &GetWalls();
 
 };
 
