@@ -13,7 +13,7 @@ class Collision
 public:
     Collision();
 
-    void SetCollision(Player *player, std::vector<Wall*> walls);
+    void SetCollision(Player *player, std::vector<Wall> *walls);
 };
 
 #endif // COLLISION_H

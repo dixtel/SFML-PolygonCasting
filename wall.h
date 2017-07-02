@@ -6,7 +6,6 @@
 
 class Wall
 {
-    friend class Render;
     friend class Collision;
 
     sf::RectangleShape wall;
@@ -24,8 +23,10 @@ class Wall
 public:
     Wall(sf::Vector2f position, sf::Vector2f size, float angle, std::string texturePath);
 
+    sf::RectangleShape &GetRect();
+    sf::Vector2f GetPosition();
+    sf::Vector2f GetSize();
     void SetPosition(sf::Vector2f position);
-
     sf::Vector2f GetPointPosition(const char  point); // A, B, C, D position
 };
 

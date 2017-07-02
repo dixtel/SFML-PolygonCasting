@@ -1,5 +1,9 @@
 #include "player.h"
 
+Player::Player() {
+
+}
+
 Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath) {
     this->position    = position;
     this->texturePath = texturePath;
@@ -82,8 +86,6 @@ void Player::UpdatePhysics() {
 
     position += velocity;
     UpdatePoints();
-
-    std::cout << direction << std::endl;
 }
 
 void Player::UpdatePlayer() {

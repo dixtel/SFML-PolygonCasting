@@ -34,8 +34,8 @@ void Game::StartGameLoop() {
     }
     world->InitGameObjects(gameObject);
 
-    polygonCast->SetAngleView(gameObject->GetPlayer()->GetAngleView());
-    polygonCast->SetDistanceView(gameObject->GetPlayer()->GetDistanceView());
+    polygonCast->SetAngleView(gameObject->GetPlayer().GetAngleView());
+    polygonCast->SetDistanceView(gameObject->GetPlayer().GetDistanceView());
 
     sf::Font font;
     if(!font.loadFromFile("font.ttf")) {
@@ -67,31 +67,31 @@ void Game::StartGameLoop() {
             }
 
             if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Right)) {
-                gameObject->GetPlayer()->GoRight(true);
+                gameObject->GetPlayer().GoRight(true);
             }
             else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Right)) {
-                 gameObject->GetPlayer()->GoRight(false);
+                 gameObject->GetPlayer().GoRight(false);
             }
 
             if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Left)) {
-                gameObject->GetPlayer()->GoLeft(true);
+                gameObject->GetPlayer().GoLeft(true);
             }
             else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Left)) {
-                 gameObject->GetPlayer()->GoLeft(false);
+                 gameObject->GetPlayer().GoLeft(false);
             }
 
             if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Up)) {
-                gameObject->GetPlayer()->GoUp(true);
+                gameObject->GetPlayer().GoUp(true);
             }
             else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Up)) {
-                 gameObject->GetPlayer()->GoUp(false);
+                 gameObject->GetPlayer().GoUp(false);
             }
 
             if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Down)) {
-                gameObject->GetPlayer()->GoDown(true);
+                gameObject->GetPlayer().GoDown(true);
             }
             else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Down)) {
-                gameObject->GetPlayer()->GoDown(false);
+                gameObject->GetPlayer().GoDown(false);
             }
         }
 
@@ -102,43 +102,43 @@ void Game::StartGameLoop() {
             float mouse_move = new_mouse_x - old_mouse_x;
             if(mouse_move > 0) {
                 mouse_move = fabs(mouse_move) / 5;
-                gameObject->GetPlayer()->GoDirectionRight(mouse_move);
+                gameObject->GetPlayer().GoDirectionRight(mouse_move);
             }
             else {
                 mouse_move = fabs(mouse_move) / 5;
-                gameObject->GetPlayer()->GoDirectionLeft(mouse_move);
+                gameObject->GetPlayer().GoDirectionLeft(mouse_move);
 
             }
         }
         old_mouse_x = new_mouse_x;
 
-        gameObject->GetPlayer()->UpdatePhysics();
+        gameObject->GetPlayer().UpdatePhysics();
 
         //collision
-        collision->SetCollision(gameObject->GetPlayer(), gameObject->GetWalls());
+        collision->SetCollision(&gameObject->GetPlayer(), &gameObject->GetWalls());
 
 
-        gameObject->GetPlayer()->UpdatePlayer();
+        gameObject->GetPlayer().UpdatePlayer();
 
 
         text_debugger.setString("fps:" + std::to_string(fps) +
-                                " x:" + std::to_string(gameObject->GetPlayer()->GetPosition().x) +
-                                " y:" + std::to_string(gameObject->GetPlayer()->GetPosition().y) +
-                                " vx:" + std::to_string(gameObject->GetPlayer()->GetVelocity().x) +
-                                " vy:" + std::to_string(gameObject->GetPlayer()->GetVelocity().y));
+                                " x:" + std::to_string(gameObject->GetPlayer().GetPosition().x) +
+                                " y:" + std::to_string(gameObject->GetPlayer().GetPosition().y) +
+                                " vx:" + std::to_string(gameObject->GetPlayer().GetVelocity().x) +
+                                " vy:" + std::to_string(gameObject->GetPlayer().GetVelocity().y));
 
 
 
-        minimap.setCenter(gameObject->GetPlayer()->GetPosition());
+        minimap.setCenter(gameObject->GetPlayer().GetPosition());
 
 
-        polygonCast->CreateView(gameObject->GetPlayer(), gameObject->GetWalls());
+        polygonCast->CreateView(&gameObject->GetPlayer(), &gameObject->GetWalls());
 
         render->Clear();
         //render->SetView(minimap);
-        render->Draw(gameObject->GetPlayer()->GetPlayerView());
-        render->Draw(gameObject->GetPlayer());
-        render->Draw(gameObject->GetWalls());
+        render->Draw(gameObject->GetPlayer().GetPlayerView());
+        render->Draw(&gameObject->GetPlayer());
+        render->Draw(&gameObject->GetWalls());
         render->ResetViev();
         render->Draw(text_debugger);
         render->Display();

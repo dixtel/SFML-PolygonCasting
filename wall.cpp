@@ -23,6 +23,18 @@ void Wall::Update() {
     pos_D = sf::Vector2f(wall.getPosition().x + wall.getSize().x-space, wall.getPosition().y + wall.getSize().y-space);
 }
 
+sf::RectangleShape &Wall::GetRect() {
+    return wall;
+}
+
+sf::Vector2f Wall::GetPosition() {
+    return position;
+}
+
+sf::Vector2f Wall::GetSize() {
+    return size;
+}
+
 void Wall::SetPosition(sf::Vector2f position) {
     this->position = position;
     Update();

@@ -95,7 +95,7 @@ Collision::Collision() {
 
 }
 
-void Collision::SetCollision(Player *player, std::vector<Wall*> walls) {
+void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
     static sf::Vector2f old_pos_A = player->GetPointPosition('A');
     static sf::Vector2f old_pos_B = player->GetPointPosition('B');
     static sf::Vector2f old_pos_C = player->GetPointPosition('C');
@@ -105,9 +105,9 @@ void Collision::SetCollision(Player *player, std::vector<Wall*> walls) {
     sf::Vector2f current_pos_C = player->GetPointPosition('C');
     sf::Vector2f current_pos_D = player->GetPointPosition('D');
 
-    for(int i = 0; i < walls.size(); ++i) {
-        sf::Vector2f wall_pos = walls[i]->wall.getPosition();
-        sf::Vector2f wall_size = walls[i]->wall.getSize();
+    for(int i = 0; i < walls->size(); ++i) {
+        sf::Vector2f wall_pos = walls->at(i).GetPosition();
+        sf::Vector2f wall_size = walls->at(i).GetSize();
 
         /*      *----coll1---*
          *    *                *
@@ -124,10 +124,10 @@ void Collision::SetCollision(Player *player, std::vector<Wall*> walls) {
          *      *---coll3----*
          */
 
-        sf::Vector2f A = walls[i]->GetPointPosition('A');
-        sf::Vector2f B = walls[i]->GetPointPosition('B');
-        sf::Vector2f C = walls[i]->GetPointPosition('C');
-        sf::Vector2f D = walls[i]->GetPointPosition('D');
+        sf::Vector2f A = walls->at(i).GetPointPosition('A');
+        sf::Vector2f B = walls->at(i).GetPointPosition('B');
+        sf::Vector2f C = walls->at(i).GetPointPosition('C');
+        sf::Vector2f D = walls->at(i).GetPointPosition('D');
 
         std::array<sf::Vector2f, 8> linesWall{ C, A,
                                                A, B,

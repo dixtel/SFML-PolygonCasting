@@ -1,20 +1,11 @@
 #include "gameobject.h"
 
 GameObject::GameObject() {
-    player = NULL;
+
 }
 
 GameObject::~GameObject() {
-    if(player) {
-        delete player;
-        player = NULL;
-    }
-    if(!walls.empty()) {
-        for (int i = 0; i < walls.size(); ++i) {
-            delete walls[i];
-        }
-        walls.clear();
-    }
+
 }
 
 void GameObject::CreatePlayer(sf::Vector2f position, sf::Vector2f size, std::string texturePath) {
@@ -29,10 +20,10 @@ void GameObject::CreateWall(sf::Vector2f position, sf::Vector2f size, float angl
 
 
 Player &GameObject::GetPlayer() {
-    return &player;
+    return player;
 }
 
 std::vector <Wall> &GameObject::GetWalls() {
-    return &walls;
+    return walls;
 }
 

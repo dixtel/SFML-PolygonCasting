@@ -69,10 +69,10 @@ class PolygonCast
     sf::Vector2f player_center_pos;
 
 
-    std::vector <Surface*> surfaces;
+    std::vector <Surface> surfaces;
     void ClearSurfaces();
-    std::vector <Wall*> GetWallsOnPlayerView(std::vector <Wall*> walls);
-    void CreateSurfaces(std::vector<Wall*> *walls);
+    std::vector <Wall> GetWallsOnPlayerView(std::vector<Wall> *walls);
+    void CreateSurfaces(std::vector<Wall> *walls);
 
 public:
     PolygonCast();
@@ -80,7 +80,7 @@ public:
     void SetAngleView(float angle);
     void SetDistanceView(float distance);
 
-    void CreateView(Player *player, std::vector<Wall*> *walls);
+    void CreateView(Player *player, std::vector<Wall> *walls);
 };
 
 #endif // POLYGONCAST_H

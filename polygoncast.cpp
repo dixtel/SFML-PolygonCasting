@@ -5,14 +5,10 @@ PolygonCast::PolygonCast() {
 }
 
 void PolygonCast::ClearSurfaces() {
-    for (std::vector<Surface*>::iterator it = surfaces.begin(); it != surfaces.end(); it++) {
-        delete (*it);
-    }
-
     surfaces.clear();
 }
 
-std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(std::vector <Wall*> walls) {
+std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) {
     std::vector <sf::Vector2f> viewTriangle;
     viewTriangle.push_back(player_center_pos);
     viewTriangle.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView)));
@@ -21,14 +17,14 @@ std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(std::vector <Wall*> walls)
     sf::Vector2f centerTriangle;
     centerTriangle = sf::Vector2f(player_center_pos.x + ToolKit::cosine(player_dir) * (distanceView/2), player_center_pos.y + (-ToolKit::sine(player_dir)) * (distanceView/2));
 
-    std::vector <Wall*> viewWalls;
+    std::vector <Wall> viewWalls;
 
-    for(int i = 0; i < walls.size(); ++i) {
+    for(int i = 0; i < walls->size(); ++i) {
         std::vector <sf::Vector2f> wallPoints;
-        wallPoints.push_back(walls[i]->GetPointPosition('A'));
-        wallPoints.push_back(walls[i]->GetPointPosition('B'));
-        wallPoints.push_back(walls[i]->GetPointPosition('C'));
-        wallPoints.push_back(walls[i]->GetPointPosition('D'));
+        wallPoints.push_back(walls->at(i).GetPointPosition('A'));
+        wallPoints.push_back(walls->at(i).GetPointPosition('B'));
+        wallPoints.push_back(walls->at(i).GetPointPosition('C'));
+        wallPoints.push_back(walls->at(i).GetPointPosition('D'));
 
         bool wallPointIntersection = true;
 
@@ -44,7 +40,7 @@ std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(std::vector <Wall*> walls)
         }
 
         if(!wallPointIntersection) {
-            viewWalls.push_back(walls[i]);
+            viewWalls.push_back(walls->at(i));
         }
 
     }
@@ -52,10 +48,10 @@ std::vector <Wall*> PolygonCast::GetWallsOnPlayerView(std::vector <Wall*> walls)
     return viewWalls;
 }
 
-void PolygonCast::CreateSurfaces(std::vector <Wall*> *walls) {
+void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
     ClearSurfaces();
 
-    std::vector <Wall*> walls_on_views = GetWallsOnPlayerView((*walls));
+    std::vector <Wall> walls_on_views = GetWallsOnPlayerView(walls);
 
     const int number_ray = angleView * 2; // 2 to more detalid
     const int angle_space = 1 / number_ray;
@@ -81,7 +77,7 @@ void PolygonCast::SetDistanceView(float distance) {
     distanceView = distance;
 }
 
-void PolygonCast::CreateView(Player *player, std::vector<Wall*> *walls) {
+void PolygonCast::CreateView(Player *player, std::vector<Wall> *walls) {
     player_dir = player->GetDirection();
     player_pos = player->GetPosition();
     player_center_pos = sf::Vector2f(player_pos.x + (player->GetSize().x/2), player_pos.y + (player->GetSize().y/2));

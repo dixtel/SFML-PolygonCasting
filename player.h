@@ -39,6 +39,7 @@ class Player {
     void UpdatePoints();
 
     public:
+    Player();
     Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath);
 
     void UpdatePhysics();

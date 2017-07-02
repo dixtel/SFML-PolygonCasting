@@ -37,9 +37,9 @@ void Render::Draw(Player *player) {
     window->draw(player->player);
 }
 
-void Render::Draw(std::vector <Wall*> walls) {
-    for(std::vector<Wall*>::iterator it = walls.begin(); it != walls.end(); ++it) {
-        window->draw((*it)->wall);
+void Render::Draw(std::vector <Wall> *walls) {
+    for (int i = 0; i < walls->size(); ++i) {
+        window->draw(walls->at(i).GetRect());
     }
 }
 
