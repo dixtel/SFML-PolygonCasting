@@ -23,11 +23,13 @@ class Wall
 public:
     Wall(sf::Vector2f position, sf::Vector2f size, float angle, std::string texturePath);
 
+    void SetPosition(sf::Vector2f position);
+    sf::Vector2f GetPointPosition(const char  point); // A, B, C, D position
+
     sf::RectangleShape &GetRect();
     sf::Vector2f GetPosition();
     sf::Vector2f GetSize();
-    void SetPosition(sf::Vector2f position);
-    sf::Vector2f GetPointPosition(const char  point); // A, B, C, D position
+    std::string GetTexturePath();
 };
 
 #endif // WALL_H

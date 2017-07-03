@@ -6,27 +6,30 @@
 #define PI 3.14159265
 
 namespace ToolKit {
-    typedef struct {
+    typedef struct intersect_propeties {
         bool is_intersection;
         sf::Vector2f position; // position intersect
         sf::Vector2f A1;       //positions of line intersection;
         sf::Vector2f A2;
         sf::Vector2f B1;       //positions of line to intersection;
         sf::Vector2f B2;
-    } intersect_propeties;
+    };
 
-    typedef struct {
+    typedef struct Vector2f_pair {
         sf::Vector2f A;
         sf::Vector2f B;
-    } Vector2f_pair;
+
+        bool operator==(Vector2f_pair &pair) {
+            if((pair.A == A) && (pair.B == B)) return true;
+            return false;
+        }
+    };
 
 
     float GetAngle(sf::Vector2f start, sf::Vector2f end);
-
+    float GetDistance(sf::Vector2f A, sf::Vector2f B);
     float cosine(float degree);
-
     float sine(float degree);
-
     intersect_propeties GetIntersectPosition(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2);
 }
 

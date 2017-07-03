@@ -13,6 +13,12 @@ float ToolKit::GetAngle(sf::Vector2f start, sf::Vector2f end) {
     return angleDeg;
 }
 
+float ToolKit::GetDistance(sf::Vector2f A, sf::Vector2f B) {
+    float x = fabs(A.x - B.x);
+    float y = fabs(A.y - B.y);
+    return sqrt(y*y + x*x);
+}
+
 float ToolKit::cosine(float degree) {
     if(degree == 90.0) {
         return 0;

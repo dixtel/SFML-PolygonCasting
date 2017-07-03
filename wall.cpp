@@ -23,18 +23,6 @@ void Wall::Update() {
     pos_D = sf::Vector2f(wall.getPosition().x + wall.getSize().x-space, wall.getPosition().y + wall.getSize().y-space);
 }
 
-sf::RectangleShape &Wall::GetRect() {
-    return wall;
-}
-
-sf::Vector2f Wall::GetPosition() {
-    return position;
-}
-
-sf::Vector2f Wall::GetSize() {
-    return size;
-}
-
 void Wall::SetPosition(sf::Vector2f position) {
     this->position = position;
     Update();
@@ -58,3 +46,20 @@ sf::Vector2f Wall::GetPointPosition(const char point) {
 
     return sf::Vector2f(0, 0);
 }
+
+sf::RectangleShape &Wall::GetRect() {
+    return wall;
+}
+
+sf::Vector2f Wall::GetPosition() {
+    return position;
+}
+
+sf::Vector2f Wall::GetSize() {
+    return size;
+}
+
+std::string Wall::GetTexturePath() {
+    return texturePath;
+}
+

@@ -4,6 +4,11 @@
 PolygonCast::PolygonCast() {
 }
 
+PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath) {
+
+}
+
+
 void PolygonCast::ClearSurfaces() {
     surfaces.clear();
 }
@@ -42,30 +47,94 @@ std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) 
         if(!wallPointIntersection) {
             viewWalls.push_back(walls->at(i));
         }
-
     }
 
     return viewWalls;
 }
 
 void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
-    ClearSurfaces();
+    std::vector <Wall> wallsOnPlayerView = GetWallsOnPlayerView(walls);
+    std::vector <lineSegment> allLinesSegments;
+    std::vector <lineSegment> linesSegmentsToDraw;
 
-    std::vector <Wall> walls_on_views = GetWallsOnPlayerView(walls);
+    // create lines
+    for(int i = 0; i < wallsOnPlayerView.size(); i++) {
+        sf::Vector2f wallAPos = wallsOnPlayerView[i].GetPointPosition('A');
+        sf::Vector2f wallBPos = wallsOnPlayerView[i].GetPointPosition('B');
+        sf::Vector2f wallCPos = wallsOnPlayerView[i].GetPointPosition('C');
+        sf::Vector2f wallDPos = wallsOnPlayerView[i].GetPointPosition('D');
+        sf::Vector2f wallSize = wallsOnPlayerView[i].GetSize();
+        std::string texturePath = wallsOnPlayerView[i].GetTexturePath();
 
-    const int number_ray = angleView * 2; // 2 to more detalid
-    const int angle_space = 1 / number_ray;
-    float angle = player_dir - (angleView / 2);
+        std::vector <sf::Vector2f> wallPoints = {wallAPos, wallBPos, wallCPos, wallDPos};
 
+        for(int j = 0; j < 4; ++j) {
+            lineSegment line(wallPoints[j], wallPoints[(j+1)%4], ToolKit::GetDistance(wallPoints[j], player_center_pos), ToolKit::GetDistance(wallPoints[(j+1)%4], player_center_pos), wallSize.y, texturePath);
+            allLinesSegments.push_back(line);
+        }
+    }
 
+    int number_ray = angleView * 2;
+    double angle_space = angleView / float(number_ray);
+    double angle = player_dir - (angleView / 2);
 
+    //set lines seen by player
+    for(int i = 0; i < number_ray; ++i) {
+        if(angle > 360) angle = fmod(angle, 360);
+        else if(angle < 0) angle = 360 - fmod(angle, 360);
 
+        sf::Vector2f endRay = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angle) * distanceView, player_center_pos.y - ToolKit::sine(angle) * distanceView);
 
+        lineSegment lineToDraw;
+        bool lineInit = false;
+        float nearestDistanceToIntersect = distanceView;
 
+        for(int j = 0; j < allLinesSegments.size(); ++j) {
+            sf::Vector2f linePosA = allLinesSegments[j].line.A;
+            sf::Vector2f linePosB = allLinesSegments[j].line.B;
 
-    for(int i = 0; i < number_ray; ++i) {        
+            if(ToolKit::GetIntersectPosition(player_center_pos, endRay, linePosA, linePosB).is_intersection) {
+                sf::Vector2f intersectPos = ToolKit::GetIntersectPosition(player_center_pos, endRay, linePosA, linePosB).position;
+                float x = fabs(player_center_pos.x - intersectPos.x);
+                float y = fabs(player_center_pos.y - intersectPos.y);
+                float distanceToIntersect = sqrt(x*x + y*y);
+
+                if(nearestDistanceToIntersect > distanceToIntersect) {
+                   nearestDistanceToIntersect = distanceToIntersect;
+                   lineToDraw = allLinesSegments[j];
+                   lineInit = true;
+                }
+            }
+        }
+
+        if(lineInit) {
+            bool linesSame = false;
+            for(int j = 0; j < linesSegmentsToDraw.size(); ++j) {
+               if(lineToDraw == linesSegmentsToDraw[j]) {
+                   linesSame = true;
+                   break;
+               }
+            }
+
+            if(!linesSame) linesSegmentsToDraw.push_back(lineToDraw);
+        }
 
         angle += angle_space;
+    }
+
+    //set surfaces from lines
+    std::cout << linesSegmentsToDraw.size() << std::endl;
+
+    ClearSurfaces();
+
+    for(int i = 0; i < linesSegmentsToDraw.size(); ++i) {
+        ToolKit::Vector2f_pair line = linesSegmentsToDraw[i].line;
+        float distanceToA = linesSegmentsToDraw[i].distance_A;
+        float distanceToB = linesSegmentsToDraw[i].distance_B;
+        float height = linesSegmentsToDraw[i].height;
+        std::string texturePath = linesSegmentsToDraw[i].texturePath;
+
+        //surfaces.push_back(CalculateSurface());
     }
 }
 

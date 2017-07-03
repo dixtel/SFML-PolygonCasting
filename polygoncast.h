@@ -52,12 +52,40 @@ class PolygonCast
         float                  height;
         std::string            texturePath;
 
+        lineSegment() {
+            line.A      = sf::Vector2f(0, 0);
+            line.B      = sf::Vector2f(0, 0);
+            distance_A  = 0;
+            distance_B  = 0;
+            height      = 0;
+            texturePath = "";
+        }
+
         lineSegment(sf::Vector2f pos1, sf::Vector2f pos2, float distance_A, float distance_B, float height, std::string texturePath) {
             line.A            = pos1;
             line.B            = pos2;
             this->distance_A  = distance_A;
             this->distance_B  = distance_B;
+            this->height      = height;
             this->texturePath = texturePath;
+        }
+
+        bool operator==(lineSegment &lineToCheck) {
+            if((lineToCheck.distance_A == distance_A) &&
+               (lineToCheck.distance_B == distance_B) &&
+               (lineToCheck.height == height) &&
+               (lineToCheck.line == line)) {
+                return true;
+            }
+            return false;
+        };
+
+        void operator=(lineSegment &lineToSet) {
+            line = lineToSet.line;
+            distance_A = lineToSet.distance_A;
+            distance_B = lineToSet.distance_B;
+            height = lineToSet.height;
+            texturePath = lineToSet.texturePath;
         }
     };
 
@@ -70,6 +98,7 @@ class PolygonCast
 
 
     std::vector <Surface> surfaces;
+    Surface CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath);
     void ClearSurfaces();
     std::vector <Wall> GetWallsOnPlayerView(std::vector<Wall> *walls);
     void CreateSurfaces(std::vector<Wall> *walls);

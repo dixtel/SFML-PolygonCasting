@@ -16,8 +16,8 @@ class Game
     Collision   *collision;
     PolygonCast *polygonCast;
 
-    const int window_width         = 600;
-    const int window_height        = 400;
+    const int window_width         = 960;
+    const int window_height        = 600;
     const std::string window_title = "PolygonCasting Game";
     const int fps                  = 60;
 
