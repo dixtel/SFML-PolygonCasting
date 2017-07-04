@@ -1,11 +1,57 @@
 #include "polygoncast.h"
 
 
-PolygonCast::PolygonCast() {
+PolygonCast::PolygonCast(const int widthhWindow, const int heightWindow) {
+    this->widthWindow  = widthhWindow;
+    this->heightWindow = heightWindow;
 }
 
 PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath) {
+    std::vector <sf::Vector2f> playerView;
+    playerView.push_back(player_center_pos);
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
 
+    float viewSpace = 100;
+
+    sf::Vector2f leftPointView  = sf::Vector2f(playerView[1].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace, playerView[1].y - (ToolKit::sine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace);
+    sf::Vector2f rightPointView = sf::Vector2f(playerView[2].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace, playerView[2].y - (ToolKit::sine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace);
+
+    float angleToLineASize = ToolKit::GetAngle(player_center_pos, line.A);
+    float angleToLineBSize = ToolKit::GetAngle(player_center_pos, line.B);
+
+    sf::Vector2f endRayToLineAPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineASize) * distanceView, player_center_pos.y - ToolKit::cosine(angleToLineASize) * distanceView);
+    sf::Vector2f endRayToLineBPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineBSize) * distanceView, player_center_pos.y - ToolKit::cosine(angleToLineBSize) * distanceView);
+
+    float distanceFromLeftPointViewA;
+    float distanceFromLeftPointViewB;
+    //Calc A pos x
+    sf::Vector2f positionIntersectionRayToLineA = ToolKit::GetIntersectPosition(player_center_pos, endRayToLineAPoint, leftPointView, rightPointView).position;
+    distanceFromLeftPointViewA = ToolKit::GetDistance(leftPointView, positionIntersectionRayToLineA);
+
+    //Calc B pos x
+    sf::Vector2f positionIntersectionRayToLineB = ToolKit::GetIntersectPosition(player_center_pos, endRayToLineBPoint, leftPointView, rightPointView).position;
+    distanceFromLeftPointViewB = ToolKit::GetDistance(leftPointView, positionIntersectionRayToLineA);
+
+    float posXLineA = ((distanceFromLeftPointViewA / ToolKit::GetDistance(leftPointView, rightPointView)) * (widthWindow + viewSpace * 2)) - viewSpace;
+    float posXLineB = ((distanceFromLeftPointViewB / ToolKit::GetDistance(leftPointView, rightPointView)) * (widthWindow + viewSpace * 2)) - viewSpace;
+
+
+    float heightRatioForLineA = (ToolKit::GetDistance(line.A, positionIntersectionRayToLineA) / ToolKit::GetDistance(player_center_pos, positionIntersectionRayToLineA));
+    float posYLineAUp = (heightWindow/2) - heightRatioForLineA * (height/2);
+    float posYLineADown = (heightWindow/2) + heightRatioForLineA * (height/2);
+
+
+    float heightRatioForLineB = (ToolKit::GetDistance(line.B, positionIntersectionRayToLineA) / ToolKit::GetDistance(player_center_pos, positionIntersectionRayToLineB));
+    float posYLineBUp = (heightWindow/2) - heightRatioForLineB * (height/2);
+    float posYLineBDown = (heightWindow/2) + heightRatioForLineB * (height/2);
+
+    sf::Vector2f pos1 = sf::Vector2f(posXLineA, posYLineAUp);
+    sf::Vector2f pos2 = sf::Vector2f(posXLineB, posYLineBUp);
+    sf::Vector2f pos3 = sf::Vector2f(posXLineB, posYLineBDown);
+    sf::Vector2f pos4 = sf::Vector2f(posXLineA, posYLineADown);
+
+    return Surface (pos1, pos2, pos3, pos4, texturePath, sf::Color(0, 0, 255, 200));
 }
 
 
@@ -14,13 +60,13 @@ void PolygonCast::ClearSurfaces() {
 }
 
 std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) {
-    std::vector <sf::Vector2f> viewTriangle;
-    viewTriangle.push_back(player_center_pos);
-    viewTriangle.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView)));
-    viewTriangle.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView)));
+    std::vector <sf::Vector2f> playerView;
+    playerView.push_back(player_center_pos);
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
 
-    sf::Vector2f centerTriangle;
-    centerTriangle = sf::Vector2f(player_center_pos.x + ToolKit::cosine(player_dir) * (distanceView/2), player_center_pos.y + (-ToolKit::sine(player_dir)) * (distanceView/2));
+    sf::Vector2f centerPlayerView;
+    centerPlayerView = sf::Vector2f(player_center_pos.x + ToolKit::cosine(player_dir) * (distanceView/2), player_center_pos.y + (-ToolKit::sine(player_dir)) * (distanceView/2));
 
     std::vector <Wall> viewWalls;
 
@@ -36,9 +82,9 @@ std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) 
         for(int j = 0; j < 4; ++j) {
            sf::Vector2f wallPoint = wallPoints[j];
 
-           if(!ToolKit::GetIntersectPosition(viewTriangle[0], viewTriangle[1], centerTriangle, wallPoint).is_intersection &&
-              !ToolKit::GetIntersectPosition(viewTriangle[1], viewTriangle[2], centerTriangle, wallPoint).is_intersection &&
-              !ToolKit::GetIntersectPosition(viewTriangle[2], viewTriangle[0], centerTriangle, wallPoint).is_intersection) {
+           if(!ToolKit::GetIntersectPosition(playerView[0], playerView[1], centerPlayerView, wallPoint).is_intersection &&
+              !ToolKit::GetIntersectPosition(playerView[1], playerView[2], centerPlayerView, wallPoint).is_intersection &&
+              !ToolKit::GetIntersectPosition(playerView[2], playerView[0], centerPlayerView, wallPoint).is_intersection) {
                wallPointIntersection = false;
                break;
            }

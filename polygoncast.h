@@ -89,6 +89,8 @@ class PolygonCast
         }
     };
 
+    int widthWindow;
+    int heightWindow;
 
     float angleView;
     float distanceView;
@@ -104,7 +106,7 @@ class PolygonCast
     void CreateSurfaces(std::vector<Wall> *walls);
 
 public:
-    PolygonCast();
+    PolygonCast(const int widthhWindow, const int heightWindow);
 
     void SetAngleView(float angle);
     void SetDistanceView(float distance);

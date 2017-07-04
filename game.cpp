@@ -5,7 +5,7 @@ Game::Game() {
     gameObject = new GameObject();
     world      = new World();
     collision  = new Collision();
-    polygonCast = new PolygonCast();
+    polygonCast = new PolygonCast(window_width, window_height);
 }
 
 Game::~Game() {
