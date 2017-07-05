@@ -6,89 +6,103 @@
 #include "toolkit.h"
 #include <vector>
 
-class PolygonCast
-{
-   struct Surface {
-    private:
-        sf::Vector2f pos1; //pos1 -- pos2
-        sf::Vector2f pos2; //pos4 -- pos3
-        sf::Vector2f pos3;
-        sf::Vector2f pos4;
+struct Surface {
+ private:
+     sf::Vector2f pos1; //pos1 -- pos2
+     sf::Vector2f pos2; //pos4 -- pos3
+     sf::Vector2f pos3;
+     sf::Vector2f pos4;
 
-        sf::VertexArray polygon;
-        std::string texturePath;
-        sf::Texture texture;
-        sf::RenderStates state;
-    public:
-        Surface(sf::Vector2f pos1, sf::Vector2f pos2, sf::Vector2f pos3, sf::Vector2f pos4, std::string texturePath = "", sf::Color color = sf::Color::Black) {
-            this->pos1 = pos1;
-            this->pos2 = pos2;
-            this->pos3 = pos3;
-            this->pos4 = pos4;
-            this->texturePath = texturePath;
+     sf::VertexArray  polygon;
+     std::string      texturePath;
+     sf::Texture      texture;
+     sf::Color        color;
+     sf::RenderStates state;
+ public:
+     Surface(sf::Vector2f pos1, sf::Vector2f pos2, sf::Vector2f pos3, sf::Vector2f pos4, std::string texturePath = "", sf::Color color = sf::Color::Black) {
+         this->pos1 = pos1;
+         this->pos2 = pos2;
+         this->pos3 = pos3;
+         this->pos4 = pos4;
+         this->texturePath = texturePath;
+         this->color = color;
 
-            if(!texture.loadFromFile(texturePath)) {
-                std::cout << "error: cannot load file (PolygonCast)" << std::endl;
-            }
-            else {
-                state.texture = &texture;
-            }
+         if(!texture.loadFromFile(texturePath)) {
+             std::cout << "error: cannot load file (PolygonCast)" << std::endl;
+         }
+         else {
+             state.texture = &texture;
+         }
 
-        }
+         polygon.setPrimitiveType(sf::PrimitiveType::Quads);
+         polygon.resize(4);
+         polygon[0].position = pos1;
+         polygon[1].position = pos2;
+         polygon[2].position = pos3;
+         polygon[3].position = pos4;
 
-        sf::VertexArray GetPolygon() {
-            return polygon;
-        }
+         //if(texturePath == "") {
+             polygon[0].color = color;
+             polygon[1].color = color;
+             polygon[2].color = color;
+             polygon[3].color = color;
+         //}
+     }
 
-        sf::RenderStates GetRenderState() {
-            return state;
-        }
-    };
+     sf::VertexArray GetPolygon() {
+         return polygon;
+     }
 
-    struct lineSegment {
-        ToolKit::Vector2f_pair line;
-        float                  distance_A;
-        float                  distance_B;
-        float                  height;
-        std::string            texturePath;
+     sf::RenderStates GetRenderState() {
+         return state;
+     }
+ };
 
-        lineSegment() {
-            line.A      = sf::Vector2f(0, 0);
-            line.B      = sf::Vector2f(0, 0);
-            distance_A  = 0;
-            distance_B  = 0;
-            height      = 0;
-            texturePath = "";
-        }
+ struct lineSegment {
+     ToolKit::Vector2f_pair line;
+     float                  distance_A;
+     float                  distance_B;
+     float                  height;
+     std::string            texturePath;
 
-        lineSegment(sf::Vector2f pos1, sf::Vector2f pos2, float distance_A, float distance_B, float height, std::string texturePath) {
-            line.A            = pos1;
-            line.B            = pos2;
-            this->distance_A  = distance_A;
-            this->distance_B  = distance_B;
-            this->height      = height;
-            this->texturePath = texturePath;
-        }
+     lineSegment() {
+         line.A      = sf::Vector2f(0, 0);
+         line.B      = sf::Vector2f(0, 0);
+         distance_A  = 0;
+         distance_B  = 0;
+         height      = 0;
+         texturePath = "";
+     }
 
-        bool operator==(lineSegment &lineToCheck) {
-            if((lineToCheck.distance_A == distance_A) &&
-               (lineToCheck.distance_B == distance_B) &&
-               (lineToCheck.height == height) &&
-               (lineToCheck.line == line)) {
-                return true;
-            }
-            return false;
-        };
+     lineSegment(sf::Vector2f pos1, sf::Vector2f pos2, float distance_A, float distance_B, float height, std::string texturePath) {
+         line.A            = pos1;
+         line.B            = pos2;
+         this->distance_A  = distance_A;
+         this->distance_B  = distance_B;
+         this->height      = height;
+         this->texturePath = texturePath;
+     }
 
-        void operator=(lineSegment &lineToSet) {
-            line = lineToSet.line;
-            distance_A = lineToSet.distance_A;
-            distance_B = lineToSet.distance_B;
-            height = lineToSet.height;
-            texturePath = lineToSet.texturePath;
-        }
-    };
+     bool operator==(lineSegment &lineToCheck) {
+         if((lineToCheck.distance_A == distance_A) &&
+            (lineToCheck.distance_B == distance_B) &&
+            (lineToCheck.height == height) &&
+            (lineToCheck.line == line)) {
+             return true;
+         }
+         return false;
+     };
 
+     void operator=(lineSegment &lineToSet) {
+         line = lineToSet.line;
+         distance_A = lineToSet.distance_A;
+         distance_B = lineToSet.distance_B;
+         height = lineToSet.height;
+         texturePath = lineToSet.texturePath;
+     }
+ };
+
+class PolygonCast {
     int widthWindow;
     int heightWindow;
 
@@ -112,6 +126,9 @@ public:
     void SetDistanceView(float distance);
 
     void CreateView(Player *player, std::vector<Wall> *walls);
+
+    std::vector <Surface> &GetSurfaces();
+
 };
 
 #endif // POLYGONCAST_H

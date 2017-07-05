@@ -6,13 +6,18 @@ PolygonCast::PolygonCast(const int widthhWindow, const int heightWindow) {
     this->heightWindow = heightWindow;
 }
 
-PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath) {
+std::vector <Surface> &PolygonCast::GetSurfaces() {
+    return surfaces;
+}
+
+Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath) {
     std::vector <sf::Vector2f> playerView;
     playerView.push_back(player_center_pos);
     playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
     playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
 
-    float viewSpace = 100;
+    float viewSpace = distanceView/2;
+    float rayExtendSize = distanceView/3;
 
     sf::Vector2f leftPointView  = sf::Vector2f(playerView[1].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace, playerView[1].y - (ToolKit::sine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace);
     sf::Vector2f rightPointView = sf::Vector2f(playerView[2].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace, playerView[2].y - (ToolKit::sine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace);
@@ -20,8 +25,8 @@ PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, 
     float angleToLineASize = ToolKit::GetAngle(player_center_pos, line.A);
     float angleToLineBSize = ToolKit::GetAngle(player_center_pos, line.B);
 
-    sf::Vector2f endRayToLineAPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineASize) * distanceView, player_center_pos.y - ToolKit::cosine(angleToLineASize) * distanceView);
-    sf::Vector2f endRayToLineBPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineBSize) * distanceView, player_center_pos.y - ToolKit::cosine(angleToLineBSize) * distanceView);
+    sf::Vector2f endRayToLineAPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineASize) * (distanceView + rayExtendSize), player_center_pos.y - ToolKit::sine(angleToLineASize) * (distanceView + rayExtendSize));
+    sf::Vector2f endRayToLineBPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineBSize) * (distanceView + rayExtendSize), player_center_pos.y - ToolKit::sine(angleToLineBSize) * (distanceView + rayExtendSize));
 
     float distanceFromLeftPointViewA;
     float distanceFromLeftPointViewB;
@@ -31,7 +36,7 @@ PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, 
 
     //Calc B pos x
     sf::Vector2f positionIntersectionRayToLineB = ToolKit::GetIntersectPosition(player_center_pos, endRayToLineBPoint, leftPointView, rightPointView).position;
-    distanceFromLeftPointViewB = ToolKit::GetDistance(leftPointView, positionIntersectionRayToLineA);
+    distanceFromLeftPointViewB = ToolKit::GetDistance(leftPointView, positionIntersectionRayToLineB);
 
     float posXLineA = ((distanceFromLeftPointViewA / ToolKit::GetDistance(leftPointView, rightPointView)) * (widthWindow + viewSpace * 2)) - viewSpace;
     float posXLineB = ((distanceFromLeftPointViewB / ToolKit::GetDistance(leftPointView, rightPointView)) * (widthWindow + viewSpace * 2)) - viewSpace;
@@ -42,7 +47,7 @@ PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, 
     float posYLineADown = (heightWindow/2) + heightRatioForLineA * (height/2);
 
 
-    float heightRatioForLineB = (ToolKit::GetDistance(line.B, positionIntersectionRayToLineA) / ToolKit::GetDistance(player_center_pos, positionIntersectionRayToLineB));
+    float heightRatioForLineB = (ToolKit::GetDistance(line.B, positionIntersectionRayToLineB) / ToolKit::GetDistance(player_center_pos, positionIntersectionRayToLineB));
     float posYLineBUp = (heightWindow/2) - heightRatioForLineB * (height/2);
     float posYLineBDown = (heightWindow/2) + heightRatioForLineB * (height/2);
 
@@ -51,7 +56,7 @@ PolygonCast::Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, 
     sf::Vector2f pos3 = sf::Vector2f(posXLineB, posYLineBDown);
     sf::Vector2f pos4 = sf::Vector2f(posXLineA, posYLineADown);
 
-    return Surface (pos1, pos2, pos3, pos4, texturePath, sf::Color(0, 0, 255, 200));
+    return Surface (pos1, pos2, pos3, pos4, texturePath, sf::Color(0, 255, 0, 200));
 }
 
 
@@ -180,8 +185,9 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
         float height = linesSegmentsToDraw[i].height;
         std::string texturePath = linesSegmentsToDraw[i].texturePath;
 
-        //surfaces.push_back(CalculateSurface());
+        surfaces.push_back(CalculateSurface(line, distanceToA, distanceToB, height, texturePath));
     }
+
 }
 
 void PolygonCast::SetAngleView(float angle) {
