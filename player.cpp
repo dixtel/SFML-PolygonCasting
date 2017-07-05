@@ -8,7 +8,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     this->position    = position;
     this->texturePath = texturePath;
     this->size        = size;
-    direction         = 90;
+    direction         = 120;
     angleView         = 70;
     distanceView      = 400;
     color             = sf::Color::Green;
