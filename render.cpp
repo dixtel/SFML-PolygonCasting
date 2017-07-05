@@ -33,6 +33,12 @@ void Render::Clear() {
     window->clear();;
 }
 
+void Render::Draw(std::vector <Surface> *surfaces) {
+    for(int i = 0; i < surfaces->size(); ++i) {
+       window->draw(surfaces->at(i).GetPolygon());
+    }
+}
+
 void Render::Draw(Player *player) {
     window->draw(player->player);
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "gameobject.h"
+#include "polygoncast.h"
 
 class Render
 {
@@ -20,6 +21,7 @@ public:
     void SetView(sf::View view);
     void Close();
     void Clear();
+    void Draw(std::vector <Surface> *surfaces);
     void Draw(Player *player);
     void Draw(std::vector <Wall> *walls);
     void Draw(sf::Text text);
