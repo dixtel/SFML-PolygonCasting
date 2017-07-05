@@ -66,31 +66,31 @@ void Game::StartGameLoop() {
                 game_loop = false;
             }
 
-            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Right)) {
+            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::D)) {
                 gameObject->GetPlayer().GoRight(true);
             }
-            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Right)) {
+            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::D)) {
                  gameObject->GetPlayer().GoRight(false);
             }
 
-            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Left)) {
+            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::A)) {
                 gameObject->GetPlayer().GoLeft(true);
             }
-            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Left)) {
+            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::A)) {
                  gameObject->GetPlayer().GoLeft(false);
             }
 
-            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Up)) {
+            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::W)) {
                 gameObject->GetPlayer().GoUp(true);
             }
-            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Up)) {
+            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::W)) {
                  gameObject->GetPlayer().GoUp(false);
             }
 
-            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Down)) {
+            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::S)) {
                 gameObject->GetPlayer().GoDown(true);
             }
-            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Down)) {
+            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::S)) {
                 gameObject->GetPlayer().GoDown(false);
             }
         }
@@ -112,6 +112,7 @@ void Game::StartGameLoop() {
         }
         old_mouse_x = new_mouse_x;
 
+
         gameObject->GetPlayer().UpdatePhysics();
 
         //collision
@@ -121,21 +122,21 @@ void Game::StartGameLoop() {
         gameObject->GetPlayer().UpdatePlayer();
 
 
+        polygonCast->CreateView(&gameObject->GetPlayer(), &gameObject->GetWalls());
+
+
         text_debugger.setString("fps:" + std::to_string(fps) +
                                 " x:" + std::to_string(gameObject->GetPlayer().GetPosition().x) +
                                 " y:" + std::to_string(gameObject->GetPlayer().GetPosition().y) +
                                 " vx:" + std::to_string(gameObject->GetPlayer().GetVelocity().x) +
                                 " vy:" + std::to_string(gameObject->GetPlayer().GetVelocity().y));
 
-
-
         minimap.setCenter(gameObject->GetPlayer().GetPosition());
 
 
-        polygonCast->CreateView(&gameObject->GetPlayer(), &gameObject->GetWalls());
-
         render->Clear();
-        //render->SetView(minimap);
+        render->Draw(&polygonCast->GetSurfaces());
+        render->SetView(minimap);
         render->Draw(gameObject->GetPlayer().GetPlayerView());
         render->Draw(&gameObject->GetPlayer());
         render->Draw(&gameObject->GetWalls());
