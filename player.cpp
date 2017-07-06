@@ -49,16 +49,28 @@ void Player::UpdatePoints() {
 void Player::UpdatePhysics() {
     //move
     if(right) {
-        velocity.x += force.x * acceleration.x;
+        float newDirection = direction - 90;
+        if(newDirection < 0) {
+            newDirection = 360 - fmod(fabs(newDirection), 360);
+        }
+        velocity += sf::Vector2f(ToolKit::cosine(newDirection) * (force.x * acceleration.x), -ToolKit::sine(newDirection) * (force.x * acceleration.x));
     }
     if(left) {
-        velocity.x -= force.x * acceleration.x;
+        float newDirection = direction + 90;
+        if(newDirection > 360) {
+            newDirection = fmod(newDirection, 360);
+        }
+        velocity += sf::Vector2f(ToolKit::cosine(newDirection) * (force.x * acceleration.x), -ToolKit::sine(newDirection) * (force.x * acceleration.x));
     }
     if(up) {
-        velocity.y -= force.y * acceleration.y;
+        velocity += sf::Vector2f(ToolKit::cosine(direction) * (force.x * acceleration.x), -ToolKit::sine(direction) * (force.x * acceleration.x));
     }
     if(down) {
-        velocity.y += force.y * acceleration.y;
+        float newDirection = direction + 180;
+        if(newDirection > 360) {
+            newDirection = fmod(newDirection, 360);
+        }
+        velocity += sf::Vector2f(ToolKit::cosine(newDirection) * (force.x * acceleration.x), -ToolKit::sine(newDirection) * (force.x * acceleration.x));
     }
 
     //friction
