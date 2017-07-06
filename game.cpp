@@ -93,25 +93,23 @@ void Game::StartGameLoop() {
             else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::S)) {
                 gameObject->GetPlayer().GoDown(false);
             }
-        }
 
-
-        static float old_mouse_x = mouse.getPosition().x;
-        float new_mouse_x = mouse.getPosition().x;
-        if(old_mouse_x != new_mouse_x) {
-            float mouse_move = new_mouse_x - old_mouse_x;
-            if(mouse_move > 0) {
-                mouse_move = fabs(mouse_move) / 5;
-                gameObject->GetPlayer().GoDirectionRight(mouse_move);
-            }
-            else {
-                mouse_move = fabs(mouse_move) / 5;
-                gameObject->GetPlayer().GoDirectionLeft(mouse_move);
+            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Right)) {
+                gameObject->GetPlayer().GoDirectionRight(true);
 
             }
-        }
-        old_mouse_x = new_mouse_x;
+            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Right)) {
+                gameObject->GetPlayer().GoDirectionRight(false);
+            }
 
+            if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Left)) {
+                gameObject->GetPlayer().GoDirectionLeft(true);
+            }
+            else if((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::Left)) {
+                gameObject->GetPlayer().GoDirectionLeft(false);
+            }
+
+        }
 
         gameObject->GetPlayer().UpdatePhysics();
 
