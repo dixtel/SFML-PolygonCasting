@@ -137,7 +137,7 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
     //set lines seen by player
     for(int i = 0; i < number_ray; ++i) {
         if(angle > 360) angle = fmod(angle, 360);
-        else if(angle < 0) angle = 360 - fmod(angle, 360);
+        else if(angle < 0) angle = 360 - fmod(fabs(angle), 360);
 
         sf::Vector2f endRay = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angle) * distanceView, player_center_pos.y - ToolKit::sine(angle) * distanceView);
 
@@ -192,6 +192,8 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
 
         surfaces.push_back(CalculateSurface(line, distanceToA, distanceToB, height, texturePath));
     }
+
+    //sort surfaces from the fareast to the nearest
 
 }
 
