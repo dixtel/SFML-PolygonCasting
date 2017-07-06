@@ -8,7 +8,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     this->position     = position;
     this->texturePath  = texturePath;
     this->size         = size;
-    direction          = 90;
+    direction          = 5;
     angleView          = 70;
     distanceView       = 1000;
     color              = sf::Color::Green;
@@ -104,6 +104,8 @@ void Player::UpdatePhysics() {
     position += velocity;
 
     UpdatePoints();
+    std::cout << "pos: " << position.x << " " << position.y << std::endl;
+    std::cout << "dir: " << direction << std::endl;
 }
 
 void Player::UpdatePlayer() {
