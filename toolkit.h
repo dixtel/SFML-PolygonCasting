@@ -6,7 +6,7 @@
 #define PI 3.14159265
 
 namespace ToolKit {
-    typedef struct intersect_propeties {
+    struct intersect_propeties {
         bool is_intersection;
         sf::Vector2f position; // position intersect
         sf::Vector2f A1;       //positions of line intersection;
@@ -15,7 +15,7 @@ namespace ToolKit {
         sf::Vector2f B2;
     };
 
-    typedef struct Vector2f_pair {
+    struct Vector2f_pair {
         sf::Vector2f A;
         sf::Vector2f B;
 
