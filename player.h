@@ -28,12 +28,15 @@ class Player {
     sf::Vector2f       max_velocity;
     sf::Vector2f       acceleration;
     float              friction;
+    float              moveDirectionSpeed;
 
     bool               is_colising;
     bool               right;
     bool               left;
     bool               up;
     bool               down;
+    bool               directionRight;
+    bool               directionLeft;
 
     void SetPosition(sf::Vector2f pos);
     void UpdatePoints();
@@ -45,8 +48,8 @@ class Player {
     void UpdatePhysics();
     void UpdatePlayer();
 
-    void GoDirectionRight(float moveLenght);
-    void GoDirectionLeft(float moveLenght);
+    void GoDirectionRight(bool enable);
+    void GoDirectionLeft(bool enable);
     void GoRight(bool enable);
     void GoLeft(bool enable);
     void GoUp(bool enable);

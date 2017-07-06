@@ -5,27 +5,30 @@ Player::Player() {
 }
 
 Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath) {
-    this->position    = position;
-    this->texturePath = texturePath;
-    this->size        = size;
-    direction         = 120;
-    angleView         = 70;
-    distanceView      = 400;
-    color             = sf::Color::Green;
-    force.x           = 2;
-    force.y           = 2;
-    velocity.x        = 0;
-    velocity.y        = 0;
-    max_velocity.x    = 5;
-    max_velocity.y    = 5;
-    acceleration.x    = 0.5;
-    acceleration.y    = 0.5;
-    friction          = 0.5;
-    is_colising       = false;
-    right             = false;
-    left              = false;
-    up                = false;
-    down              = false;
+    this->position     = position;
+    this->texturePath  = texturePath;
+    this->size         = size;
+    direction          = 90;
+    angleView          = 70;
+    distanceView       = 1000;
+    color              = sf::Color::Green;
+    force.x            = 5;
+    force.y            = 5;
+    velocity.x         = 0;
+    velocity.y         = 0;
+    max_velocity.x     = 5;
+    max_velocity.y     = 5;
+    acceleration.x     = 0.5;
+    acceleration.y     = 0.5;
+    friction           = 0.7;
+    moveDirectionSpeed = 1;
+    is_colising        = false;
+    right              = false;
+    left               = false;
+    up                 = false;
+    down               = false;
+    directionRight     = false;
+    directionLeft      = false;
 
     UpdatePoints();
     UpdatePlayer();
@@ -84,7 +87,22 @@ void Player::UpdatePhysics() {
     if(velocity.y > max_velocity.y) velocity.y = max_velocity.y;
     else if(velocity.y < -max_velocity.y) velocity.y = -max_velocity.y;
 
+    //direction
+    if(directionRight) {
+        direction -= moveDirectionSpeed;
+        if(direction < 0) {
+            direction = 360 + fmod(direction, 360);
+        }
+    }
+    else if(directionLeft) {
+        direction += moveDirectionSpeed;
+        if(direction > 360) {
+            direction = fmod(direction, 360);
+        }
+    }
+
     position += velocity;
+
     UpdatePoints();
 }
 
@@ -94,18 +112,12 @@ void Player::UpdatePlayer() {
     player.setFillColor(color);
 }
 
-void Player::GoDirectionRight(float moveLenght) {
-    direction -= moveLenght;
-    if(direction < 0) {
-        direction = 360 + fmod(direction, 360);
-    }
+void Player::GoDirectionRight(bool enable) {
+    directionRight = enable;
 }
 
-void Player::GoDirectionLeft(float moveLenght) {
-    direction += moveLenght;
-    if(direction > 360) {
-        direction = fmod(direction, 360);
-    }
+void Player::GoDirectionLeft(bool enable) {
+    directionLeft = enable;
 }
 
 void Player::GoRight(bool enable) {
