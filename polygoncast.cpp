@@ -16,7 +16,7 @@ Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanc
     playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
     playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
 
-    float viewSpace = distanceView/2;
+    float viewSpace = distanceView*2;
     float rayExtendSize = distanceView/3;
 
     sf::Vector2f leftPointView  = sf::Vector2f(playerView[1].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace, playerView[1].y - (ToolKit::sine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace);
@@ -56,7 +56,12 @@ Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanc
     sf::Vector2f pos3 = sf::Vector2f(posXLineB, posYLineBDown);
     sf::Vector2f pos4 = sf::Vector2f(posXLineA, posYLineADown);
 
-    return Surface (pos1, pos2, pos3, pos4, texturePath, sf::Color(0, 255, 0, 200));
+    int shadowValueLineA = 255 * heightRatioForLineA;
+    int shadowValueLineB = 255 * heightRatioForLineB;
+
+    Surface surface(pos1, pos2, pos3, pos4, texturePath, sf::Color(0, shadowValueLineA, 0, 255), sf::Color(0, shadowValueLineB, 0, 255));
+
+    return surface;
 }
 
 
