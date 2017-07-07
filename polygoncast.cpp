@@ -15,21 +15,21 @@ Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanc
 
     std::vector <sf::Vector2f> playerView;
     playerView.push_back(player_center_pos);
-    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
-    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::CoSine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::Sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::CoSine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::Sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
 
 
     float viewSpace = distanceView*2;
     float rayExtendSize = distanceView/3;
 
-    sf::Vector2f leftPointView  = sf::Vector2f(playerView[1].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace, playerView[1].y - (ToolKit::sine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace);
-    sf::Vector2f rightPointView = sf::Vector2f(playerView[2].x + (ToolKit::cosine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace, playerView[2].y - (ToolKit::sine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace);
+    sf::Vector2f leftPointView  = sf::Vector2f(playerView[1].x + (ToolKit::CoSine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace, playerView[1].y - (ToolKit::Sine(ToolKit::GetAngle(playerView[2], playerView[1]))) * viewSpace);
+    sf::Vector2f rightPointView = sf::Vector2f(playerView[2].x + (ToolKit::CoSine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace, playerView[2].y - (ToolKit::Sine(ToolKit::GetAngle(playerView[1], playerView[2]))) * viewSpace);
 
     float angleToLineASize = ToolKit::GetAngle(player_center_pos, line.A);
     float angleToLineBSize = ToolKit::GetAngle(player_center_pos, line.B);
 
-    sf::Vector2f endRayToLineAPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineASize) * (distanceView + rayExtendSize), player_center_pos.y - ToolKit::sine(angleToLineASize) * (distanceView + rayExtendSize));
-    sf::Vector2f endRayToLineBPoint = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angleToLineBSize) * (distanceView + rayExtendSize), player_center_pos.y - ToolKit::sine(angleToLineBSize) * (distanceView + rayExtendSize));
+    sf::Vector2f endRayToLineAPoint = sf::Vector2f(player_center_pos.x + ToolKit::CoSine(angleToLineASize) * (distanceView + rayExtendSize), player_center_pos.y - ToolKit::Sine(angleToLineASize) * (distanceView + rayExtendSize));
+    sf::Vector2f endRayToLineBPoint = sf::Vector2f(player_center_pos.x + ToolKit::CoSine(angleToLineBSize) * (distanceView + rayExtendSize), player_center_pos.y - ToolKit::Sine(angleToLineBSize) * (distanceView + rayExtendSize));
 
     float distanceFromLeftPointViewA;
     float distanceFromLeftPointViewB;
@@ -78,11 +78,11 @@ void PolygonCast::ClearSurfaces() {
 std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) {
     std::vector <sf::Vector2f> playerView;
     playerView.push_back(player_center_pos);
-    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
-    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::CoSine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::Sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
+    playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::CoSine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::Sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
 
     sf::Vector2f centerPlayerView;
-    centerPlayerView = sf::Vector2f(player_center_pos.x + ToolKit::cosine(player_dir) * (distanceView/2), player_center_pos.y + (-ToolKit::sine(player_dir)) * (distanceView/2));
+    centerPlayerView = sf::Vector2f(player_center_pos.x + ToolKit::CoSine(player_dir) * (distanceView/2), player_center_pos.y + (-ToolKit::Sine(player_dir)) * (distanceView/2));
 
     std::vector <Wall> viewWalls;
 
@@ -145,7 +145,7 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
         if(angle > 360) angle = fmod(angle, 360);
         else if(angle < 0) angle = 360 - fmod(fabs(angle), 360);
 
-        sf::Vector2f endRay = sf::Vector2f(player_center_pos.x + ToolKit::cosine(angle) * distanceView, player_center_pos.y - ToolKit::sine(angle) * distanceView);
+        sf::Vector2f endRay = sf::Vector2f(player_center_pos.x + ToolKit::CoSine(angle) * distanceView, player_center_pos.y - ToolKit::Sine(angle) * distanceView);
 
         lineSegment lineToDraw;
         bool lineInit = false;

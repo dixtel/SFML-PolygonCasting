@@ -49,11 +49,11 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     float space = 0.2;
     if(angle_A1_start > angle_A2_start) {
         double new_direction = angleA1;
-        sf::Vector2f vector = sf::Vector2f(ToolKit::cosine(new_direction), -ToolKit::sine(new_direction));
+        sf::Vector2f vector = sf::Vector2f(ToolKit::CoSine(new_direction), -ToolKit::Sine(new_direction));
 
         float reverse_angle = ToolKit::GetAngle(invalid_pos, old_pos);
-        float x = ToolKit::cosine(reverse_angle);
-        float y = -ToolKit::sine(reverse_angle);
+        float x = ToolKit::CoSine(reverse_angle);
+        float y = -ToolKit::Sine(reverse_angle);
 
         intersect_position += sf::Vector2f(x * space, y * space);
 
@@ -61,11 +61,11 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     }
     else if(angle_A1_start < angle_A2_start) {
         double new_direction = angleA2;
-        sf::Vector2f vector = sf::Vector2f(ToolKit::cosine(new_direction), -ToolKit::sine(new_direction));
+        sf::Vector2f vector = sf::Vector2f(ToolKit::CoSine(new_direction), -ToolKit::Sine(new_direction));
 
         float reverse_angle = ToolKit::GetAngle(invalid_pos, old_pos);
-        float x = ToolKit::cosine(reverse_angle);
-        float y = -ToolKit::sine(reverse_angle);
+        float x = ToolKit::CoSine(reverse_angle);
+        float y = -ToolKit::Sine(reverse_angle);
 
         intersect_position += sf::Vector2f(x * space, y * space);
 
@@ -73,14 +73,14 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     }
     else {
         double new_direction = ToolKit::GetAngle(intersect_position, old_pos);
-        sf::Vector2f vector = sf::Vector2f(ToolKit::cosine(new_direction), -ToolKit::sine(new_direction));
+        sf::Vector2f vector = sf::Vector2f(ToolKit::CoSine(new_direction), -ToolKit::Sine(new_direction));
 
         if(new_direction == 90 || new_direction == 270) vector.y = 0;
         else if(new_direction == 0 || new_direction == 360 || new_direction == 180) vector.x = 0;
 
         float reverse_angle = ToolKit::GetAngle(invalid_pos, old_pos);
-        float space_x = ToolKit::cosine(reverse_angle);
-        float space_y = -ToolKit::sine(reverse_angle);
+        float space_x = ToolKit::CoSine(reverse_angle);
+        float space_y = -ToolKit::Sine(reverse_angle);
 
         intersect_position += sf::Vector2f(space_x * space, space_y * space);
 
