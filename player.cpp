@@ -53,24 +53,24 @@ void Player::UpdatePhysics() {
         if(newDirection < 0) {
             newDirection = 360 - fmod(fabs(newDirection), 360);
         }
-        velocity += sf::Vector2f(Toolkit::Cosine(newDirection) * (force.x * acceleration.x), -ToolKit::Sine(newDirection) * (force.x * acceleration.x));
+        velocity += sf::Vector2f(Toolkit::Cosine(newDirection) * (force.x * acceleration.x), -Toolkit::Sine(newDirection) * (force.x * acceleration.x));
     }
     if(left) {
         float newDirection = direction + 90;
         if(newDirection > 360) {
             newDirection = fmod(newDirection, 360);
         }
-        velocity += sf::Vector2f(Toolkit::Cosine(newDirection) * (force.x * acceleration.x), -ToolKit::Sine(newDirection) * (force.x * acceleration.x));
+        velocity += sf::Vector2f(Toolkit::Cosine(newDirection) * (force.x * acceleration.x), -Toolkit::Sine(newDirection) * (force.x * acceleration.x));
     }
     if(up) {
-        velocity += sf::Vector2f(Toolkit::Cosine(direction) * (force.x * acceleration.x), -ToolKit::Sine(direction) * (force.x * acceleration.x));
+        velocity += sf::Vector2f(Toolkit::Cosine(direction) * (force.x * acceleration.x), -Toolkit::Sine(direction) * (force.x * acceleration.x));
     }
     if(down) {
         float newDirection = direction + 180;
         if(newDirection > 360) {
             newDirection = fmod(newDirection, 360);
         }
-        velocity += sf::Vector2f(Toolkit::Cosine(newDirection) * (force.x * acceleration.x), -ToolKit::Sine(newDirection) * (force.x * acceleration.x));
+        velocity += sf::Vector2f(Toolkit::Cosine(newDirection) * (force.x * acceleration.x), -Toolkit::Sine(newDirection) * (force.x * acceleration.x));
     }
 
     //friction
@@ -195,13 +195,12 @@ sf::Vector2f Player::GetPointPosition(const char point) {
 
 sf::ConvexShape Player::GetPlayerView() {
     sf::Vector2f player_center_pos = sf::Vector2f(position.x + (size.x/2), position.y + (size.y/2));
-
     sf::ConvexShape view;
     view.setFillColor(sf::Color(255, 255, 255, 100));
     view.setPointCount(3);
     view.setPoint(0, player_center_pos);
-    view.setPoint(1, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::Sine(fmod((direction + (angleView/2)), 360)) * distanceView)));
-    view.setPoint(2, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-ToolKit::Sine(fmod((direction - (angleView/2)), 360)) * distanceView)));
+    view.setPoint(1, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-Toolkit::Sine(fmod((direction + (angleView/2)), 360)) * distanceView)));
+    view.setPoint(2, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-Toolkit::Sine(fmod((direction - (angleView/2)), 360)) * distanceView)));
 
     return view;
 }

@@ -1,6 +1,6 @@
 #include "toolkit.h"
 
-float ToolKit::GetAngle(sf::Vector2f start, sf::Vector2f end) {
+float Toolkit::GetAngle(sf::Vector2f start, sf::Vector2f end) {
     sf::Vector2f direction = start - end;
 
     float angleRad = atan2(direction.x, direction.y);
@@ -13,13 +13,13 @@ float ToolKit::GetAngle(sf::Vector2f start, sf::Vector2f end) {
     return angleDeg;
 }
 
-float ToolKit::GetDistance(sf::Vector2f A, sf::Vector2f B) {
+float Toolkit::GetDistance(sf::Vector2f A, sf::Vector2f B) {
     float x = fabs(A.x - B.x);
     float y = fabs(A.y - B.y);
     return sqrt(y*y + x*x);
 }
 
-float ToolKit::CoSine(float degree) {
+float Toolkit::Cosine(float degree) {
     if(degree == 90.0) {
         return 0;
     }
@@ -30,7 +30,7 @@ float ToolKit::CoSine(float degree) {
     return std::cos(degree * PI / 180);
 }
 
-float ToolKit::Sine(float degree) {
+float Toolkit::Sine(float degree) {
     if(degree == 0.0) {
         return 0;
     }
@@ -44,9 +44,7 @@ float ToolKit::Sine(float degree) {
     return std::sin(degree * PI / 180);
 }
 
-//TODO change function GetIntersectPosition to GetIntersect
-
-ToolKit::intersect_propeties ToolKit::GetIntersection(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2) {
+Toolkit::intersect_propeties Toolkit::GetIntersection(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2) {
     intersect_propeties result;
     sf::Vector2f s1, s2;
     s1.x = A2.x - A1.x;

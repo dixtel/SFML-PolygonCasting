@@ -49,7 +49,7 @@ struct Surface {
  };
 
  struct lineSegment {
-     ToolKit::Vector2f_pair line;
+     Toolkit::Vector2f_pair line;
      float                  distance_A;
      float                  distance_B;
      float                  height;
@@ -104,7 +104,7 @@ class PolygonCast {
 
 
     std::vector <Surface> surfaces;
-    Surface CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath);
+    Surface CalculateSurface(Toolkit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath);
     void SortLineSegments(std::vector <lineSegment> *lines);
     void ClearSurfaces();
     std::vector <Wall> GetWallsOnPlayerView(std::vector<Wall> *walls);
@@ -112,9 +112,6 @@ class PolygonCast {
 
 public:
     PolygonCast(const int widthhWindow, const int heightWindow);
-
-    void SetAngleView(float angle);
-    void SetDistanceView(float distance);
 
     void CreateView(Player *player, std::vector<Wall> *walls);
 

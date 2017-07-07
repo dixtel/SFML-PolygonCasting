@@ -34,9 +34,6 @@ void Game::StartGameLoop() {
     }
     world->InitGameObjects(gameObject);
 
-    polygonCast->SetAngleView(gameObject->GetPlayer().GetAngleView());
-    polygonCast->SetDistanceView(gameObject->GetPlayer().GetDistanceView());
-
     sf::Font font;
     if(!font.loadFromFile("font.ttf")) {
         std::cout << "error load font ;/" << std::endl;

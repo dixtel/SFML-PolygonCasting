@@ -5,7 +5,7 @@
 
 #define PI 3.14159265
 
-namespace ToolKit {
+namespace Toolkit {
     struct intersect_propeties {
         bool is_intersection;
         sf::Vector2f position; // position intersect
@@ -28,7 +28,7 @@ namespace ToolKit {
 
     float GetAngle(sf::Vector2f start, sf::Vector2f end);
     float GetDistance(sf::Vector2f A, sf::Vector2f B);
-    float CoSine(float degree);
+    float Cosine(float degree);
     float Sine(float degree);
     intersect_propeties GetIntersection(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2);
 }

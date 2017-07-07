@@ -1,7 +1,7 @@
 #include "collision.h"
 
 sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle) {
-    sf::Vector2f intersect_position = ToolKit::GetIntersection(old_pos, invalid_pos, start_pos_obstacle, end_pos_obstacle).position;
+    sf::Vector2f intersect_position = Toolkit::GetIntersection(old_pos, invalid_pos, start_pos_obstacle, end_pos_obstacle).position;
     float distance;
 
     if(intersect_position.x == invalid_pos.x) {
@@ -17,8 +17,8 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     }
 
 
-    float angleA1 = ToolKit::GetAngle(end_pos_obstacle, start_pos_obstacle);
-    float angleA2 = ToolKit::GetAngle(start_pos_obstacle, end_pos_obstacle);
+    float angleA1 = Toolkit::GetAngle(end_pos_obstacle, start_pos_obstacle);
+    float angleA2 = Toolkit::GetAngle(start_pos_obstacle, end_pos_obstacle);
 
     if(angleA1 > angleA2) {
         float tmp = angleA2;
@@ -26,7 +26,7 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
         angleA1 = tmp;
     }
 
-    float start_vector_angle = ToolKit::GetAngle(invalid_pos, old_pos);
+    float start_vector_angle = Toolkit::GetAngle(invalid_pos, old_pos);
     float angle_A1_start;
     float angle_A2_start;
 
@@ -49,11 +49,11 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     float space = 0.2;
     if(angle_A1_start > angle_A2_start) {
         double new_direction = angleA1;
-        sf::Vector2f vector = sf::Vector2f(ToolKit::CoSine(new_direction), -ToolKit::Sine(new_direction));
+        sf::Vector2f vector = sf::Vector2f(Toolkit::Cosine(new_direction), -Toolkit::Sine(new_direction));
 
-        float reverse_angle = ToolKit::GetAngle(invalid_pos, old_pos);
-        float x = ToolKit::CoSine(reverse_angle);
-        float y = -ToolKit::Sine(reverse_angle);
+        float reverse_angle = Toolkit::GetAngle(invalid_pos, old_pos);
+        float x = Toolkit::Cosine(reverse_angle);
+        float y = -Toolkit::Sine(reverse_angle);
 
         intersect_position += sf::Vector2f(x * space, y * space);
 
@@ -61,26 +61,26 @@ sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f inval
     }
     else if(angle_A1_start < angle_A2_start) {
         double new_direction = angleA2;
-        sf::Vector2f vector = sf::Vector2f(ToolKit::CoSine(new_direction), -ToolKit::Sine(new_direction));
+        sf::Vector2f vector = sf::Vector2f(Toolkit::Cosine(new_direction), -Toolkit::Sine(new_direction));
 
-        float reverse_angle = ToolKit::GetAngle(invalid_pos, old_pos);
-        float x = ToolKit::CoSine(reverse_angle);
-        float y = -ToolKit::Sine(reverse_angle);
+        float reverse_angle = Toolkit::GetAngle(invalid_pos, old_pos);
+        float x = Toolkit::Cosine(reverse_angle);
+        float y = -Toolkit::Sine(reverse_angle);
 
         intersect_position += sf::Vector2f(x * space, y * space);
 
         new_player_position = intersect_position + (vector * distance);
     }
     else {
-        double new_direction = ToolKit::GetAngle(intersect_position, old_pos);
-        sf::Vector2f vector = sf::Vector2f(ToolKit::CoSine(new_direction), -ToolKit::Sine(new_direction));
+        double new_direction = Toolkit::GetAngle(intersect_position, old_pos);
+        sf::Vector2f vector = sf::Vector2f(Toolkit::Cosine(new_direction), -Toolkit::Sine(new_direction));
 
         if(new_direction == 90 || new_direction == 270) vector.y = 0;
         else if(new_direction == 0 || new_direction == 360 || new_direction == 180) vector.x = 0;
 
-        float reverse_angle = ToolKit::GetAngle(invalid_pos, old_pos);
-        float space_x = ToolKit::CoSine(reverse_angle);
-        float space_y = -ToolKit::Sine(reverse_angle);
+        float reverse_angle = Toolkit::GetAngle(invalid_pos, old_pos);
+        float space_x = Toolkit::Cosine(reverse_angle);
+        float space_y = -Toolkit::Sine(reverse_angle);
 
         intersect_position += sf::Vector2f(space_x * space, space_y * space);
 
@@ -95,6 +95,7 @@ Collision::Collision() {
 
 }
 
+//TODO fix collision
 void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
     static sf::Vector2f old_pos_A = player->GetPointPosition('A');
     static sf::Vector2f old_pos_B = player->GetPointPosition('B');
@@ -136,7 +137,7 @@ void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
 
         // A
         for(int j = 0; j < 8; j+=2) {
-            if(ToolKit::GetIntersection(old_pos_A, current_pos_A, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+            if(Toolkit::GetIntersection(old_pos_A, current_pos_A, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
                 std::cout << "Collision A" << std::endl;
 
                 sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_A, current_pos_A, linesWall.at(j), linesWall.at(j + 1));
@@ -152,7 +153,7 @@ void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
 
         // B
         for(int j = 0; j < 8; j+=2) {
-            if(ToolKit::GetIntersection(old_pos_B, current_pos_B, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+            if(Toolkit::GetIntersection(old_pos_B, current_pos_B, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
                 std::cout << "Collision B" << std::endl;
 
                 sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_B, current_pos_B, linesWall.at(j), linesWall.at(j + 1));
@@ -169,7 +170,7 @@ void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
 
         // C
         for(int j = 0; j < 8; j+=2) {
-            if(ToolKit::GetIntersection(old_pos_C, current_pos_C, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+            if(Toolkit::GetIntersection(old_pos_C, current_pos_C, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
                 std::cout << "Collision C" << std::endl;
 
                 sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_C, current_pos_C, linesWall.at(j), linesWall.at(j + 1));
@@ -186,7 +187,7 @@ void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
 
         // D
         for(int j = 0; j < 8; j+=2) {
-            if(ToolKit::GetIntersection(old_pos_D, current_pos_D, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
+            if(Toolkit::GetIntersection(old_pos_D, current_pos_D, linesWall.at(j), linesWall.at(j + 1)).is_intersection) {
                 std::cout << "Collision D" << std::endl;
 
                 sf::Vector2f new_position = GetPlayerCollisionPosition(old_pos_D, current_pos_D, linesWall.at(j), linesWall.at(j + 1));
