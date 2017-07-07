@@ -19,7 +19,7 @@ float ToolKit::GetDistance(sf::Vector2f A, sf::Vector2f B) {
     return sqrt(y*y + x*x);
 }
 
-float ToolKit::cosine(float degree) {
+float ToolKit::CoSine(float degree) {
     if(degree == 90.0) {
         return 0;
     }
@@ -30,7 +30,7 @@ float ToolKit::cosine(float degree) {
     return std::cos(degree * PI / 180);
 }
 
-float ToolKit::sine(float degree) {
+float ToolKit::Sine(float degree) {
     if(degree == 0.0) {
         return 0;
     }

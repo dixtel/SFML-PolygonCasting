@@ -28,8 +28,8 @@ namespace ToolKit {
 
     float GetAngle(sf::Vector2f start, sf::Vector2f end);
     float GetDistance(sf::Vector2f A, sf::Vector2f B);
-    float cosine(float degree);
-    float sine(float degree);
+    float CoSine(float degree);
+    float Sine(float degree);
     intersect_propeties GetIntersection(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2);
 }
 
