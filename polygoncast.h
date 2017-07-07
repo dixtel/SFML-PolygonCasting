@@ -105,6 +105,7 @@ class PolygonCast {
 
     std::vector <Surface> surfaces;
     Surface CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath);
+    void SortLineSegments(std::vector <lineSegment> *lines);
     void ClearSurfaces();
     std::vector <Wall> GetWallsOnPlayerView(std::vector<Wall> *walls);
     void CreateSurfaces(std::vector<Wall> *walls);

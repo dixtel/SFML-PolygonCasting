@@ -11,10 +11,13 @@ std::vector <Surface> &PolygonCast::GetSurfaces() {
 }
 
 Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanceA, float distanceB, float height, std::string texturePath) {
+    height = float(widthWindow) / float(heightWindow) * height;
+
     std::vector <sf::Vector2f> playerView;
     playerView.push_back(player_center_pos);
     playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir + (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir + (angleView/2)), 360)) * distanceView));
     playerView.push_back(sf::Vector2f(player_center_pos.x + (ToolKit::cosine(fmod((player_dir - (angleView/2)), 360)) * distanceView), player_center_pos.y - ToolKit::sine(fmod((player_dir - (angleView/2)), 360)) * distanceView));
+
 
     float viewSpace = distanceView*2;
     float rayExtendSize = distanceView/3;
@@ -64,6 +67,9 @@ Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanc
     return surface;
 }
 
+void PolygonCast::SortLineSegments(std::vector <lineSegment> *lines) {
+    sf::Vector2f cameraPosition = player_center_pos;
+}
 
 void PolygonCast::ClearSurfaces() {
     surfaces.clear();
@@ -178,6 +184,11 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
         angle += angle_space;
     }
 
+
+    //sort surfaces from the fareast to the nearest
+
+    SortLineSegments(&linesSegmentsToDraw);
+
     //set surfaces from lines
     std::cout << linesSegmentsToDraw.size() << std::endl;
 
@@ -192,9 +203,6 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
 
         surfaces.push_back(CalculateSurface(line, distanceToA, distanceToB, height, texturePath));
     }
-
-    //sort surfaces from the fareast to the nearest
-
 }
 
 void PolygonCast::SetAngleView(float angle) {
