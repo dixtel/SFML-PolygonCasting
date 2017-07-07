@@ -1,6 +1,6 @@
 #include "collision.h"
 
-sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle) {
+sf::Vector2f Collision::GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle) {
     sf::Vector2f intersect_position = Toolkit::GetIntersection(old_pos, invalid_pos, start_pos_obstacle, end_pos_obstacle).position;
     float distance;
 
@@ -95,7 +95,7 @@ Collision::Collision() {
 
 }
 
-//TODO fix collision
+// TODO fix collision
 void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
     static sf::Vector2f old_pos_A = player->GetPointPosition('A');
     static sf::Vector2f old_pos_B = player->GetPointPosition('B');

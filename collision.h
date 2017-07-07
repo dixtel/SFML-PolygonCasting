@@ -10,6 +10,7 @@
 
 class Collision
 {
+    sf::Vector2f GetPlayerCollisionPosition(sf::Vector2f old_pos, sf::Vector2f invalid_pos, sf::Vector2f start_pos_obstacle, sf::Vector2f end_pos_obstacle);
 public:
     Collision();
 
