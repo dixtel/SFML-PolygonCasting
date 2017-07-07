@@ -30,7 +30,7 @@ namespace ToolKit {
     float GetDistance(sf::Vector2f A, sf::Vector2f B);
     float cosine(float degree);
     float sine(float degree);
-    intersect_propeties GetIntersectPosition(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2);
+    intersect_propeties GetIntersection(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2);
 }
 
 #endif // TOOLKIT_H

@@ -46,7 +46,7 @@ float ToolKit::sine(float degree) {
 
 //TODO change function GetIntersectPosition to GetIntersect
 
-ToolKit::intersect_propeties ToolKit::GetIntersectPosition(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2) {
+ToolKit::intersect_propeties ToolKit::GetIntersection(sf::Vector2f A1, sf::Vector2f A2, sf::Vector2f B1, sf::Vector2f B2) {
     intersect_propeties result;
     sf::Vector2f s1, s2;
     s1.x = A2.x - A1.x;
