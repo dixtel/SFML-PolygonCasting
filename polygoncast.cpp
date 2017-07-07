@@ -34,11 +34,11 @@ Surface PolygonCast::CalculateSurface(ToolKit::Vector2f_pair line, float distanc
     float distanceFromLeftPointViewA;
     float distanceFromLeftPointViewB;
     //Calc A pos x
-    sf::Vector2f positionIntersectionRayToLineA = ToolKit::GetIntersectPosition(player_center_pos, endRayToLineAPoint, leftPointView, rightPointView).position;
+    sf::Vector2f positionIntersectionRayToLineA = ToolKit::GetIntersection(player_center_pos, endRayToLineAPoint, leftPointView, rightPointView).position;
     distanceFromLeftPointViewA = ToolKit::GetDistance(leftPointView, positionIntersectionRayToLineA);
 
     //Calc B pos x
-    sf::Vector2f positionIntersectionRayToLineB = ToolKit::GetIntersectPosition(player_center_pos, endRayToLineBPoint, leftPointView, rightPointView).position;
+    sf::Vector2f positionIntersectionRayToLineB = ToolKit::GetIntersection(player_center_pos, endRayToLineBPoint, leftPointView, rightPointView).position;
     distanceFromLeftPointViewB = ToolKit::GetDistance(leftPointView, positionIntersectionRayToLineB);
 
     float posXLineA = ((distanceFromLeftPointViewA / ToolKit::GetDistance(leftPointView, rightPointView)) * (widthWindow + viewSpace * 2)) - viewSpace;
@@ -98,9 +98,9 @@ std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) 
         for(int j = 0; j < 4; ++j) {
            sf::Vector2f wallPoint = wallPoints[j];
 
-           if(!ToolKit::GetIntersectPosition(playerView[0], playerView[1], centerPlayerView, wallPoint).is_intersection &&
-              !ToolKit::GetIntersectPosition(playerView[1], playerView[2], centerPlayerView, wallPoint).is_intersection &&
-              !ToolKit::GetIntersectPosition(playerView[2], playerView[0], centerPlayerView, wallPoint).is_intersection) {
+           if(!ToolKit::GetIntersection(playerView[0], playerView[1], centerPlayerView, wallPoint).is_intersection &&
+              !ToolKit::GetIntersection(playerView[1], playerView[2], centerPlayerView, wallPoint).is_intersection &&
+              !ToolKit::GetIntersection(playerView[2], playerView[0], centerPlayerView, wallPoint).is_intersection) {
                wallPointIntersection = false;
                break;
            }
@@ -155,8 +155,8 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
             sf::Vector2f linePosA = allLinesSegments[j].line.A;
             sf::Vector2f linePosB = allLinesSegments[j].line.B;
 
-            if(ToolKit::GetIntersectPosition(player_center_pos, endRay, linePosA, linePosB).is_intersection) {
-                sf::Vector2f intersectPos = ToolKit::GetIntersectPosition(player_center_pos, endRay, linePosA, linePosB).position;
+            if(ToolKit::GetIntersection(player_center_pos, endRay, linePosA, linePosB).is_intersection) {
+                sf::Vector2f intersectPos = ToolKit::GetIntersection(player_center_pos, endRay, linePosA, linePosB).position;
                 float x = fabs(player_center_pos.x - intersectPos.x);
                 float y = fabs(player_center_pos.y - intersectPos.y);
                 float distanceToIntersect = sqrt(x*x + y*y);
