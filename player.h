@@ -38,6 +38,7 @@ class Player {
     bool               directionRight;
     bool               directionLeft;
 
+    void SetDirection(float angle);
     void SetPosition(sf::Vector2f pos);
     void UpdatePoints();
 

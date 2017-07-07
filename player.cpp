@@ -34,6 +34,10 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     UpdatePlayer();
 }
 
+void Player::SetDirection(float angle) {
+    direction = angle;
+}
+
 void Player::SetPosition(sf::Vector2f pos) {
     position = pos;
     UpdatePoints();
