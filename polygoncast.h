@@ -82,14 +82,6 @@ struct Surface {
          }
          return false;
      };
-
-     void operator=(lineSegment &lineToSet) {
-         line = lineToSet.line;
-         distance_A = lineToSet.distance_A;
-         distance_B = lineToSet.distance_B;
-         height = lineToSet.height;
-         texturePath = lineToSet.texturePath;
-     };
  };
 
 class PolygonCast {

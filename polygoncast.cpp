@@ -1,5 +1,15 @@
 #include "polygoncast.h"
 
+void ChangePosition(std::vector <lineSegment> *object, unsigned were, unsigned int what) {
+    if((what > object->size() - 1) || (were > object->size() - 1)) {
+        std::cout << "error: function ChangePosition: valid variables (PolygonCast)" << std::endl;
+        return;
+    }
+    \
+    object->insert(object->begin() + were, *(object->begin() + what));
+    object->erase(object->begin() + what + 1);
+
+}
 
 PolygonCast::PolygonCast(const int widthhWindow, const int heightWindow) {
     this->widthWindow  = widthhWindow;
@@ -69,6 +79,53 @@ Surface PolygonCast::CalculateSurface(Toolkit::Vector2f_pair line, float distanc
 
 void PolygonCast::SortLineSegments(std::vector <lineSegment> *lines) {
     sf::Vector2f cameraPosition = player_center_pos;
+    //TODO change variable name player_center_pos to cameraPosition
+
+    for(int i = 0; i < lines->size(); ++i) {
+        sf::Vector2f A = lines->at(i).line.A;
+        sf::Vector2f B = lines->at(i).line.B;
+
+        float cosineA = Toolkit::Cosine(Toolkit::GetAngle(cameraPosition, A));
+        float sineA = -Toolkit::Sine(Toolkit::GetAngle(cameraPosition, A));
+
+        float cosineB = Toolkit::Cosine(Toolkit::GetAngle(cameraPosition, B));
+        float sineB = -Toolkit::Sine(Toolkit::GetAngle(cameraPosition, B));
+
+        float distanceToA = Toolkit::GetDistance(cameraPosition, A);
+        float distanceToB = Toolkit::GetDistance(cameraPosition, B);
+
+        sf::Vector2f maxViewPosA = sf::Vector2f(A.x + (cosineA * (distanceView - Toolkit::GetDistance(cameraPosition, A))), A.y + (sineA * (distanceView - Toolkit::GetDistance(cameraPosition, A))) );
+        sf::Vector2f maxViewPosB = sf::Vector2f(B.x + (cosineB * (distanceView - Toolkit::GetDistance(cameraPosition, B))), B.y + (sineB * (distanceView - Toolkit::GetDistance(cameraPosition, B))) );
+
+        for(int j = 0; j < lines->size(); ++j) {
+            if(j == i) continue;
+
+            sf::Vector2f intersectToA = lines->at(j).line.A;
+            sf::Vector2f intersectToB = lines->at(j).line.B;
+
+            if(Toolkit::GetIntersection(cameraPosition, maxViewPosA, intersectToA, intersectToB).is_intersection) {
+                float distance = Toolkit::GetDistance(cameraPosition, Toolkit::GetIntersection(cameraPosition, maxViewPosA, intersectToA, intersectToB).position);
+
+                if(distance > distanceToA) {
+                    if(j > i) {
+                        ChangePosition(lines, i, j);
+                    }
+                }
+            }
+
+            if(Toolkit::GetIntersection(cameraPosition, maxViewPosB, intersectToA, intersectToB).is_intersection) {
+                float distance = Toolkit::GetDistance(cameraPosition, Toolkit::GetIntersection(cameraPosition, maxViewPosB, intersectToA, intersectToB).position);
+
+                if(distance > distanceToB) {
+                    if(j > i) {
+                        ChangePosition(lines, i, j);
+                    }
+                }
+            }
+
+        }
+
+    }
 }
 
 void PolygonCast::ClearSurfaces() {
