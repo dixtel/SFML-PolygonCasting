@@ -119,7 +119,7 @@ void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
          * coll4 |          |-r--coll2
          *  |    |          |    |
          *  |    |          |    |
-         *  |    C----------D    |
+         *  |    D----------C    |
          *  *                    *
          *    *                *
          *      *---coll3----*
@@ -130,10 +130,10 @@ void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
         sf::Vector2f C = walls->at(i).GetPointPosition('C');
         sf::Vector2f D = walls->at(i).GetPointPosition('D');
 
-        std::array<sf::Vector2f, 8> linesWall{ C, A,
-                                               A, B,
-                                               B, D,
-                                               D, C };
+        std::array<sf::Vector2f, 8> linesWall{ A, B,
+                                               B, C,
+                                               C, D,
+                                               D, A };
 
         // A
         for(int j = 0; j < 8; j+=2) {
