@@ -19,6 +19,10 @@ float Toolkit::GetDistance(sf::Vector2f A, sf::Vector2f B) {
     return sqrt(y*y + x*x);
 }
 
+float Toolkit::GetDistance(float A, float B) {
+    return fabs(A - B);
+}
+
 float Toolkit::Cosine(float degree) {
     if(degree == 90.0) {
         return 0;
