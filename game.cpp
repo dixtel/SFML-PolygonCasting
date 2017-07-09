@@ -36,7 +36,7 @@ void Game::StartGameLoop() {
 
     sf::Font font;
     if(!font.loadFromFile("font.ttf")) {
-        std::cout << "error load font ;/" << std::endl;
+        std::cout << "error load font (Game)" << std::endl;
         return;
     }
 
@@ -49,7 +49,7 @@ void Game::StartGameLoop() {
     sf::Clock clock;
     float lastTime = 0;
 
-    sf::View minimap(render->GetDefaultView());
+    sf::View minimap(sf::FloatRect(-200, -200, window_width + 400, window_height + 400));
     minimap.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
 
     sf::Mouse mouse;
