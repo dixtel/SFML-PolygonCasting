@@ -81,21 +81,83 @@ void PolygonCast::SortLineSegments(std::vector <lineSegment> *lines) {
     sf::Vector2f cameraPosition = player_center_pos;
     //TODO change variable name player_center_pos to cameraPosition
 
+    const float linesDivision = 10;
+
     for(int i = 0; i < lines->size(); ++i) {
         sf::Vector2f A = lines->at(i).line.A;
         sf::Vector2f B = lines->at(i).line.B;
 
-        float cosineA = Toolkit::Cosine(Toolkit::GetAngle(cameraPosition, A));
-        float sineA = -Toolkit::Sine(Toolkit::GetAngle(cameraPosition, A));
+        std::vector <sf::Vector2f> linesPointsPos;
+        std::vector <sf::Vector2f> maxViewsPos;
 
-        float cosineB = Toolkit::Cosine(Toolkit::GetAngle(cameraPosition, B));
-        float sineB = -Toolkit::Sine(Toolkit::GetAngle(cameraPosition, B));
+        float widthLine = Toolkit::GetDistance(A.x , B.x);
+        float heightLine = Toolkit::GetDistance(A.y , B.y);
 
-        float distanceToA = Toolkit::GetDistance(cameraPosition, A);
-        float distanceToB = Toolkit::GetDistance(cameraPosition, B);
+        float spaceX = widthLine / linesDivision;
+        float spaceY = heightLine / linesDivision;
 
-        sf::Vector2f maxViewPosA = sf::Vector2f(A.x + (cosineA * (distanceView - Toolkit::GetDistance(cameraPosition, A))), A.y + (sineA * (distanceView - Toolkit::GetDistance(cameraPosition, A))) );
-        sf::Vector2f maxViewPosB = sf::Vector2f(B.x + (cosineB * (distanceView - Toolkit::GetDistance(cameraPosition, B))), B.y + (sineB * (distanceView - Toolkit::GetDistance(cameraPosition, B))) );
+        //set linesPointsPos
+        if(spaceX) {
+            //spaceX
+            if(A.x > B.x) {
+                for(int j = 0; j < linesDivision + 1; ++j) {
+                    float x = A.x - (j * spaceX);
+                    float y = 0;
+
+                    if(A.y > B.y) {
+                        y = A.y - (Toolkit::GetDistance(A.y, B.y) * (j * spaceX / Toolkit::GetDistance(A.y, B.y)));
+                    }
+                    else {
+                        y = A.y + (Toolkit::GetDistance(A.y, B.y) * (j * spaceX / Toolkit::GetDistance(A.y, B.y)));
+                    }
+
+                    linesPointsPos.push_back(sf::Vector2f(x, y));
+                }
+            }
+            else {
+                for(int j = 0; j < linesDivision + 1; ++j) {
+                    float x = A.x + (j * spaceX);
+                    float y = 0;
+
+                    if(A.y > B.y) {
+                        y = A.y - (Toolkit::GetDistance(A.y, B.y) * (j * spaceX / Toolkit::GetDistance(A.y, B.y)));
+                    }
+                    else {
+                        y = A.y + (Toolkit::GetDistance(A.y, B.y) * (j * spaceX / Toolkit::GetDistance(A.y, B.y)));
+                    }
+
+                    linesPointsPos.push_back(sf::Vector2f(x, y));
+                }
+            }
+        }
+        else {
+            //spaceY
+            for(int j = 0; j < linesDivision + 1; ++j) {
+                float x = A.x;
+                float y = 0;
+
+                if(A.y > B.y) {
+                    y = A.y - (Toolkit::GetDistance(A.y, B.y) * (j * spaceY / Toolkit::GetDistance(A.y, B.y)));
+                }
+                else {
+                    y = A.y + (Toolkit::GetDistance(A.y, B.y) * (j * spaceY / Toolkit::GetDistance(A.y, B.y)));
+                }
+
+                linesPointsPos.push_back(sf::Vector2f(x, y));
+            }
+        }
+
+        //set maxVievsPos
+        for(int j = 0; j < linesPointsPos.size(); ++j) {
+            float angle = Toolkit::GetAngle(cameraPosition, linesPointsPos[j]);
+            float cos = Toolkit::Cosine(angle);
+            float sin = -Toolkit::Sine(angle);
+            float distanceToMaxViev = distanceView - (Toolkit::GetDistance(cameraPosition, linesPointsPos[j]));
+            sf::Vector2f endView = sf::Vector2f(linesPointsPos[j].x + (cos * distanceView), linesPointsPos[j].y + (sin * distanceView));
+
+            maxViewsPos.push_back(endView);
+        }
+
 
         for(int j = 0; j < lines->size(); ++j) {
             if(j == i) continue;
@@ -103,25 +165,19 @@ void PolygonCast::SortLineSegments(std::vector <lineSegment> *lines) {
             sf::Vector2f intersectToA = lines->at(j).line.A;
             sf::Vector2f intersectToB = lines->at(j).line.B;
 
-            if(Toolkit::GetIntersection(cameraPosition, maxViewPosA, intersectToA, intersectToB).is_intersection) {
-                float distance = Toolkit::GetDistance(cameraPosition, Toolkit::GetIntersection(cameraPosition, maxViewPosA, intersectToA, intersectToB).position);
+            for(int k = 0; k < maxViewsPos.size(); ++k) {
+                float distanceToLinePoint = Toolkit::GetDistance(cameraPosition, linesPointsPos[k]);
+                if(Toolkit::GetIntersection(cameraPosition, maxViewsPos[k], intersectToA, intersectToB).is_intersection) {
+                    float distance = Toolkit::GetDistance(cameraPosition, Toolkit::GetIntersection(cameraPosition, maxViewsPos[k], intersectToA, intersectToB).position);
 
-                if(distance > distanceToA) {
-                    if(j > i) {
-                        ChangePosition(lines, i, j);
+                    if(distance > distanceToLinePoint) {
+                        if(j > i) {
+                            ChangePosition(lines, i, j);
+                        }
                     }
                 }
             }
 
-            if(Toolkit::GetIntersection(cameraPosition, maxViewPosB, intersectToA, intersectToB).is_intersection) {
-                float distance = Toolkit::GetDistance(cameraPosition, Toolkit::GetIntersection(cameraPosition, maxViewPosB, intersectToA, intersectToB).position);
-
-                if(distance > distanceToB) {
-                    if(j > i) {
-                        ChangePosition(lines, i, j);
-                    }
-                }
-            }
         }
     }
 }
@@ -173,6 +229,8 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
     std::vector <Wall> wallsOnPlayerView = GetWallsOnPlayerView(walls);
     std::vector <lineSegment> allLinesSegments;
     std::vector <lineSegment> linesSegmentsToDraw;
+
+    if(wallsOnPlayerView.size() == 0) return;
 
     // create lines
     for(int i = 0; i < wallsOnPlayerView.size(); i++) {
