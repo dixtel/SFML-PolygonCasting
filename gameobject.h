@@ -15,7 +15,7 @@ public:
 
     //init
     void CreatePlayer(sf::Vector2f position, sf::Vector2f size, std::string texturePath);
-    void CreateWall(sf::Vector2f position, sf::Vector2f size, float angle, std::string texturePath);
+    void CreateWall(sf::Vector2f position, sf::Vector2f size, float height, float angle, std::string texturePath);
 
     //get
     Player &GetPlayer();
