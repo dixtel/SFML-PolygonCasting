@@ -119,7 +119,7 @@ void World::LoadMap(const std::string path) {
         for(int j = 0; j < object_attributes.size(); j++) {
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "type") {
                 std::cout << "type found\n";
-                object.type = object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size()-1);
+                object.type = object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1);
             }
 
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "position") {
@@ -133,21 +133,26 @@ void World::LoadMap(const std::string path) {
                 object.size = GetXY(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
             }
 
+            if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "height") {
+                std::cout << "height found\n";
+                object.height = GetX(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
+            }
+
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "angle") {
                 std::cout << "angle found\n";
-                object.angle = GetX(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size()-1));
+                object.angle = GetX(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
             }
 
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "texturepath") {
                 std::cout << "texturepath found\n";
-                object.texturePath = object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size()-1);
+                object.texturePath = object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1);
             }
 
         }
 
         objects.push_back(object);
         std::cout << object.type << "\n" << object.position.x << " " << object.position.y << "\n" <<
-                     object.size.x << " " << object.size.y << "\n" <<
+                     object.size.x << " " << object.height << " " << object.size.y << "\n" <<
                      object.angle << "\n" << object.texturePath << "\n";
     }
 
@@ -162,7 +167,7 @@ void World::InitGameObjects(GameObject *gameObject) {
         }
 
         if(objects[i].type == "wall") {
-            gameObject->CreateWall(objects[i].position, objects[i].size, objects[i].angle, objects[i].texturePath);
+            gameObject->CreateWall(objects[i].position, objects[i].size, objects[i].height, objects[i].angle, objects[i].texturePath);
         }
 
     }

@@ -10,7 +10,7 @@
 
 
 /* txt file of object exmaple
-    type:player position:50.3200,50.0540 size:10.23,10.001,0.5 angle:240023 texturepath:texturepath/path.png /n
+    type:player position:50.3200,50.0540 size:10.23,10.001,0.5 height:0 angle:240023 texturepath:texturepath/path.png /n
 
     Description:
     Types: player.
@@ -25,6 +25,7 @@ struct Object {
     std::string       texturePath;
     sf::Vector2f      position;
     sf::Vector2f      size;
+    float             height;
     float             angle;
 };
 
