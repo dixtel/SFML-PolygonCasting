@@ -239,12 +239,13 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
         sf::Vector2f wallCPos = wallsOnPlayerView[i].GetPointPosition('C');
         sf::Vector2f wallDPos = wallsOnPlayerView[i].GetPointPosition('D');
         sf::Vector2f wallSize = wallsOnPlayerView[i].GetSize();
+        float wallHeight = wallsOnPlayerView[i].GetHeight();
         std::string texturePath = wallsOnPlayerView[i].GetTexturePath();
 
         std::vector <sf::Vector2f> wallPoints = {wallAPos, wallBPos, wallCPos, wallDPos};
 
         for(int j = 0; j < 4; ++j) {
-            lineSegment line(wallPoints[j], wallPoints[(j+1)%4], Toolkit::GetDistance(wallPoints[j], player_center_pos), Toolkit::GetDistance(wallPoints[(j+1)%4], player_center_pos), wallSize.y, texturePath);
+            lineSegment line(wallPoints[j], wallPoints[(j+1)%4], Toolkit::GetDistance(wallPoints[j], player_center_pos), Toolkit::GetDistance(wallPoints[(j+1)%4], player_center_pos), wallHeight, texturePath);
             allLinesSegments.push_back(line);
         }
     }
