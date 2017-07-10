@@ -1,8 +1,9 @@
 #include "wall.h"
 
-Wall::Wall(sf::Vector2f position, sf::Vector2f size, float angle, std::string texturePath) {
+Wall::Wall(sf::Vector2f position, sf::Vector2f size, float height, float angle, std::string texturePath) {
     this->position = position;
     this->size     = size;
+    this->height   = height;
     this->angle    = angle;
     this->texturePath = texturePath;
     color = sf::Color::Red;
@@ -57,6 +58,10 @@ sf::Vector2f Wall::GetPosition() {
 
 sf::Vector2f Wall::GetSize() {
     return size;
+}
+
+float Wall::GetHeight() {
+    return height;
 }
 
 std::string Wall::GetTexturePath() {
