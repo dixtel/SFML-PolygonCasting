@@ -1,6 +1,6 @@
 type:player position:0,0 size:100,100 angle:0 texturepath:texturepath/path.png
 // Walls
-type:wall position:150,200 size:100,100 height:200 angle:0 texturepath:texturepath/path.png
-type:wall position:250,200 size:100,100 height:200 angle:0 texturepath:texturepath/path.png
-type:wall position:350,200 size:100,100 height:200 angle:0 texturepath:texturepath/path.png
+type:wall position:-150,-200 size:100,100 height:200 angle:0 texturepath:texturepath/path.png
+type:wall position:-250,-200 size:100,100 height:200 angle:0 texturepath:texturepath/path.png
+type:wall position:-350,-200 size:100,100 height:200 angle:0 texturepath:texturepath/path.png
 // End Walls
