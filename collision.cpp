@@ -95,7 +95,6 @@ Collision::Collision() {
 
 }
 
-// TODO fix collision
 void Collision::SetCollision(Player *player, std::vector<Wall> *walls) {
     static sf::Vector2f old_pos_A = player->GetPointPosition('A');
     static sf::Vector2f old_pos_B = player->GetPointPosition('B');
