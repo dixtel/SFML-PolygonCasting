@@ -90,9 +90,8 @@ class PolygonCast {
 
     float angleView;
     float distanceView;
-    float player_dir;
-    sf::Vector2f player_pos;
-    sf::Vector2f player_center_pos;
+    float directionView;
+    sf::Vector2f cameraPosition;
 
 
     std::vector <Surface> surfaces;
