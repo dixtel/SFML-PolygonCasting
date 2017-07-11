@@ -49,7 +49,7 @@ void Game::StartGameLoop() {
     sf::Clock clock;
     float lastTime = 0;
 
-    sf::View minimap(sf::FloatRect(-200, -200, window_width + 400, window_height + 400));
+    sf::View minimap(sf::FloatRect(-800, -800, window_width + 1600, window_height + 1600));
     minimap.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
 
     sf::Mouse mouse;
