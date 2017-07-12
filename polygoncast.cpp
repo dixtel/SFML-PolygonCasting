@@ -29,7 +29,7 @@ Surface PolygonCast::CalculateSurface(Toolkit::Vector2f_pair line, float distanc
     viewTriangle.push_back(sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod((directionView - (angleView/2)), 360)) * distanceView), cameraPosition.y - Toolkit::Sine(fmod((directionView - (angleView/2)), 360)) * distanceView));
 
 
-    float viewSpace = distanceView*2;
+    float viewSpace = distanceView*10;
     float rayExtendSize = distanceView/3;
 
     sf::Vector2f leftPointView  = sf::Vector2f(viewTriangle[1].x + (Toolkit::Cosine(Toolkit::GetAngle(viewTriangle[2], viewTriangle[1]))) * viewSpace, viewTriangle[1].y - (Toolkit::Sine(Toolkit::GetAngle(viewTriangle[2], viewTriangle[1]))) * viewSpace);
@@ -184,13 +184,24 @@ void PolygonCast::ClearSurfaces() {
 }
 
 std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) {
-    std::vector <sf::Vector2f> viewTriangle;
-    viewTriangle.push_back(cameraPosition);
-    viewTriangle.push_back(sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod((directionView + (angleView/2)), 360)) * distanceView), cameraPosition.y - Toolkit::Sine(fmod((directionView + (angleView/2)), 360)) * distanceView));
-    viewTriangle.push_back(sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod((directionView - (angleView/2)), 360)) * distanceView), cameraPosition.y - Toolkit::Sine(fmod((directionView - (angleView/2)), 360)) * distanceView));
+    // A-----B
+    // |     |
+    // D--C--C
+    // C - cameraPosition
 
-    sf::Vector2f centerViewTriangle;
-    centerViewTriangle = sf::Vector2f(cameraPosition.x + Toolkit::Cosine(directionView) * (distanceView/2), cameraPosition.y + (-Toolkit::Sine(directionView)) * (distanceView/2));
+    const float widthViewRectangle = distanceView + distanceView / 3;
+    const float heightViewRectangle = distanceView;
+
+    float leftUpPositionY = (cameraPosition.y + ((-Toolkit::Sine(fmod(directionView + 90, 360)) * (widthViewRectangle/2))) + (-Toolkit::Sine(directionView) * (heightViewRectangle)));
+    float leftUpPositionX = cameraPosition.x + ((Toolkit::Cosine(fmod(directionView + 90, 360)) * (widthViewRectangle/2)) + (Toolkit::Cosine(directionView) * (heightViewRectangle)));
+    float rightUpPositionY = (cameraPosition.y + ((-Toolkit::Sine(fmod(directionView - 90, 360)) * (widthViewRectangle/2))) + (-Toolkit::Sine(directionView) * (heightViewRectangle)));
+    float rightUpPositionX = cameraPosition.x + ((Toolkit::Cosine(fmod(directionView - 90, 360)) * (widthViewRectangle/2)) + (Toolkit::Cosine(directionView) * (heightViewRectangle)));
+
+    sf::Vector2f viewRectangleAPoint = sf::Vector2f(leftUpPositionX, leftUpPositionY);
+    sf::Vector2f viewRectangleBPoint = sf::Vector2f(rightUpPositionX, rightUpPositionY);
+    sf::Vector2f viewRectangleCPoint = sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod(directionView - 90, 360)) * (widthViewRectangle/2)), cameraPosition.y + (-Toolkit::Sine(fmod(directionView - 90, 360)) * (widthViewRectangle/2)));
+    sf::Vector2f viewRectangleDPoint = sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod(directionView + 90, 360)) * (widthViewRectangle/2)), cameraPosition.y + (-Toolkit::Sine(fmod(directionView + 90, 360)) * (widthViewRectangle/2)));
+    sf::Vector2f centerViewRectangle = sf::Vector2f(cameraPosition.x, cameraPosition.y + (-Toolkit::Sine(directionView) * (distanceView/2)));
 
     std::vector <Wall> wallsOnViews;
 
@@ -206,9 +217,10 @@ std::vector <Wall> PolygonCast::GetWallsOnPlayerView(std::vector <Wall> *walls) 
         for(int j = 0; j < 4; ++j) {
            sf::Vector2f wallPointPosition = wallPointsPosistions[j];
 
-           if(!Toolkit::GetIntersection(viewTriangle[0], viewTriangle[1], centerViewTriangle, wallPointPosition).is_intersection &&
-              !Toolkit::GetIntersection(viewTriangle[1], viewTriangle[2], centerViewTriangle, wallPointPosition).is_intersection &&
-              !Toolkit::GetIntersection(viewTriangle[2], viewTriangle[0], centerViewTriangle, wallPointPosition).is_intersection) {
+           if(!Toolkit::GetIntersection(viewRectangleAPoint, viewRectangleBPoint, centerViewRectangle, wallPointPosition).is_intersection &&
+              !Toolkit::GetIntersection(viewRectangleBPoint, viewRectangleCPoint, centerViewRectangle, wallPointPosition).is_intersection &&
+              !Toolkit::GetIntersection(viewRectangleCPoint, viewRectangleDPoint, centerViewRectangle, wallPointPosition).is_intersection &&
+              !Toolkit::GetIntersection(viewRectangleDPoint, viewRectangleAPoint, centerViewRectangle, wallPointPosition).is_intersection) {
                wallPointIntersection = false;
                break;
            }
@@ -320,7 +332,8 @@ void PolygonCast::CreateView(Player *player, std::vector<Wall> *walls) {
     angleView      = player->GetAngleView();
     distanceView   = player->GetDistanceView();
     directionView  = player->GetDirection();
-    cameraPosition = sf::Vector2f(player->GetPosition().x + (player->GetSize().x/2), player->GetPosition().y + (player->GetSize().y/2));
+
+    cameraPosition = sf::Vector2f((player->GetPosition().x + (player->GetSize().x/2)) + (Toolkit::Cosine(fmod(directionView + 180 ,360)) * (player->GetSize().y/2)), player->GetPosition().y + (player->GetSize().y/2) + (Toolkit::Cosine(fmod(directionView + 180 ,360)) * (player->GetSize().y/2)));
 
     CreateSurfaces(walls);
 }
