@@ -8,7 +8,7 @@ Player::Player(sf::Vector2f position, sf::Vector2f size, std::string texturePath
     this->position     = position;
     this->texturePath  = texturePath;
     this->size         = size;
-    direction          = 90;
+    direction          = 45;
     angleView          = 70;
     distanceView       = 1000;
     color              = sf::Color::Green;
@@ -199,14 +199,48 @@ sf::Vector2f Player::GetPointPosition(const char point) {
 
 sf::ConvexShape Player::GetPlayerView() {
     sf::Vector2f player_center_pos = sf::Vector2f(position.x + (size.x/2), position.y + (size.y/2));
-    sf::ConvexShape view;
-    view.setFillColor(sf::Color(255, 255, 255, 100));
-    view.setPointCount(3);
-    view.setPoint(0, player_center_pos);
-    view.setPoint(1, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-Toolkit::Sine(fmod((direction + (angleView/2)), 360)) * distanceView)));
-    view.setPoint(2, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-Toolkit::Sine(fmod((direction - (angleView/2)), 360)) * distanceView)));
+    sf::ConvexShape viewTrinagle;
+    viewTrinagle.setFillColor(sf::Color(255, 255, 255, 100));
+    viewTrinagle.setPointCount(3);
+    viewTrinagle.setPoint(0, sf::Vector2f((GetPosition().x + (GetSize().x/2)) + (Toolkit::Cosine(fmod(direction + 180 ,360)) * (GetSize().y/2)), GetPosition().y + (GetSize().y/2) + (Toolkit::Cosine(fmod(direction + 180 ,360)) * (GetSize().y/2))));
+    viewTrinagle.setPoint(1, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction + (angleView/2)), 360)) * distanceView), player_center_pos.y + (-Toolkit::Sine(fmod((direction + (angleView/2)), 360)) * distanceView)));
+    viewTrinagle.setPoint(2, sf::Vector2f(player_center_pos.x + (Toolkit::Cosine(fmod((direction - (angleView/2)), 360)) * distanceView), player_center_pos.y + (-Toolkit::Sine(fmod((direction - (angleView/2)), 360)) * distanceView)));
 
-    return view;
+    sf::Vector2f cameraPosition = sf::Vector2f(position.x + (size.x/2), position.y + (size.y/2));
+
+    const float widthViewRectangle = distanceView + distanceView / 3;
+    const float heightViewRectangle = distanceView;
+
+    float leftUpPositionY = (cameraPosition.y + ((-Toolkit::Sine(fmod(direction + 90, 360)) * (widthViewRectangle/2))) + (-Toolkit::Sine(direction) * (heightViewRectangle)));
+    float leftUpPositionX = cameraPosition.x + ((Toolkit::Cosine(fmod(direction + 90, 360)) * (widthViewRectangle/2)) + (Toolkit::Cosine(direction) * (heightViewRectangle)));
+    float rightUpPositionY = (cameraPosition.y + ((-Toolkit::Sine(fmod(direction - 90, 360)) * (widthViewRectangle/2))) + (-Toolkit::Sine(direction) * (heightViewRectangle)));
+    float rightUpPositionX = cameraPosition.x + ((Toolkit::Cosine(fmod(direction - 90, 360)) * (widthViewRectangle/2)) + (Toolkit::Cosine(direction) * (heightViewRectangle)));
+
+    sf::Vector2f viewRectangleAPoint = sf::Vector2f(leftUpPositionX, leftUpPositionY);
+    sf::Vector2f viewRectangleBPoint = sf::Vector2f(rightUpPositionX, rightUpPositionY);
+    sf::Vector2f viewRectangleCPoint = sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod(direction - 90, 360)) * (widthViewRectangle/2)), cameraPosition.y + (-Toolkit::Sine(fmod(direction - 90, 360)) * (widthViewRectangle/2)));
+    sf::Vector2f viewRectangleDPoint = sf::Vector2f(cameraPosition.x + (Toolkit::Cosine(fmod(direction + 90, 360)) * (widthViewRectangle/2)), cameraPosition.y + (-Toolkit::Sine(fmod(direction + 90, 360)) * (widthViewRectangle/2)));
+
+    sf::ConvexShape viewRectangle;
+    viewRectangle.setFillColor(sf::Color(0, 0, 255, 100));
+    viewRectangle.setPointCount(4);
+    viewRectangle.setPoint(0, viewRectangleAPoint);
+    viewRectangle.setPoint(1, viewRectangleBPoint);
+    viewRectangle.setPoint(2, viewRectangleCPoint);
+    viewRectangle.setPoint(3, viewRectangleDPoint);
+
+    static bool enable = false;
+
+    if(enable) {
+        enable = false;
+        return viewTrinagle;
+    }
+    else {
+        enable = true;
+        return viewRectangle;
+    }
+
+    return viewRectangle;
 }
 
 
