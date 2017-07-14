@@ -1,4 +1,7 @@
 type:player position:0,0 size:100,100 angle:0 texturepath:texturepath/path.png
+// Landscape/Ceiling (positions relative to window)
+type:floor position:0,300 size:960,300 texturepath:floor.jpg
+type:ceiling position:0,0 size:960,300 texturepath:ceiling.jpg
 // Walls
 type:wall position:150, 100 size:50,50 height:200 angle:0 texturepath:wall.jpg
 type:wall position:250, 100 size:50,50 height:100 angle:0 texturepath:wall.jpg
