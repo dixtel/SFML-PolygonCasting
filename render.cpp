@@ -35,7 +35,7 @@ void Render::Clear() {
 
 void Render::Draw(std::vector <Surface> *surfaces) {
     for(int i = 0; i < surfaces->size(); ++i) {
-       window->draw(surfaces->at(i).GetPolygon());
+       window->draw(surfaces->at(i).GetPolygon(), surfaces->at(i).GetRenderState());
     }
 }
 
