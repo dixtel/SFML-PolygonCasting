@@ -33,11 +33,23 @@ class World
 {
     std::vector <Object> objects;
     bool                 is_load = false;
+
+    sf::VertexArray floor;
+    sf::VertexArray ceiling;
+    sf::Texture floorTexture;
+    sf::Texture ceilingTexture;
+    sf::RenderStates floorRenderState;
+    sf::RenderStates ceilingRenderState;
 public:
     World();
 
     void LoadMap(const std::string path);
     void InitGameObjects(GameObject *gameObject);
+
+    sf::VertexArray GetFloor();
+    sf::VertexArray GetCeiling();
+    sf::RenderStates &GetFloorRenderState();
+    sf::RenderStates &GetCeilingRenderState();
 
     bool isLoad();
 };

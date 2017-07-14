@@ -150,18 +150,73 @@ void World::LoadMap(const std::string path) {
 
         }
 
+        //TODO fix wall y position
+
         objects.push_back(object);
-        std::cout << object.type << "\n" << object.position.x << " " << object.position.y << "\n" <<
-                     object.size.x << " " << object.height << " " << object.size.y << "\n" <<
-                     object.angle << "\n" << object.texturePath << "\n";
+        std::cout << "type: " << object.type               << std::endl
+                  << "position: " << object.position.x
+                  << "," << object.position.y              << std::endl
+                  << "size: " << object.size.x
+                  << "," << object.size.y                  << std::endl
+                  << "height: " << object.height           << std::endl
+                  << "angle: " << object.angle             << std::endl
+                  << "texturepath: " << object.texturePath << std::endl;
     }
 
+    for(int i = 0; i < objects.size(); ++i) {
+        if(objects[i].type == "floor") {
+            floor.setPrimitiveType(sf::PrimitiveType::Quads);
 
+            if(!floorTexture.loadFromFile(objects[i].texturePath)) {
+                std::cout << "error: " << objects[i].texturePath << " path to texture are valid (World)" << std::endl;
+            }
+            else {
+                floorRenderState.texture = &floorTexture;
+
+                sf::Vector2f floorTextureSize = sf::Vector2f(floorTexture.getSize().x, floorTexture.getSize().y);
+
+                sf::Vector2f pos1 = sf::Vector2f(objects[i].position.x, objects[i].position.y);
+                sf::Vector2f pos2 = sf::Vector2f(objects[i].position.x + objects[i].size.x, objects[i].position.y);
+                sf::Vector2f pos3 = sf::Vector2f(objects[i].position.x + objects[i].size.x, objects[i].position.y + + objects[i].size.y);
+                sf::Vector2f pos4 = sf::Vector2f(objects[i].position.x, objects[i].position.y + + objects[i].size.y);
+
+                floor.append(sf::Vertex(pos1, sf::Vector2f(0, 0)));
+                floor.append(sf::Vertex(pos2, sf::Vector2f(floorTextureSize.x, 0)));
+                floor.append(sf::Vertex(pos3, sf::Vector2f(floorTextureSize.x, floorTextureSize.y)));
+                floor.append(sf::Vertex(pos4, sf::Vector2f(0, floorTextureSize.y)));
+            }
+
+        }
+
+        if(objects[i].type == "ceiling") {
+            ceiling.setPrimitiveType(sf::PrimitiveType::Quads);
+
+
+            if(!ceilingTexture.loadFromFile(objects[i].texturePath)) {
+                std::cout << "error: " << objects[i].texturePath << " path to texture are valid (World)" << std::endl;
+            }
+            else {
+                ceilingRenderState.texture = &ceilingTexture;
+
+                sf::Vector2f ceilingTextureSize = sf::Vector2f(ceilingTexture.getSize().x, ceilingTexture.getSize().y);
+
+                sf::Vector2f pos1 = sf::Vector2f(objects[i].position.x, objects[i].position.y);
+                sf::Vector2f pos2 = sf::Vector2f(objects[i].position.x + objects[i].size.x, objects[i].position.y);
+                sf::Vector2f pos3 = sf::Vector2f(objects[i].position.x + objects[i].size.x, objects[i].position.y + + objects[i].size.y);
+                sf::Vector2f pos4 = sf::Vector2f(objects[i].position.x, objects[i].position.y + + objects[i].size.y);
+
+                ceiling.append(sf::Vertex(pos1, sf::Vector2f(0, 0)));
+                ceiling.append(sf::Vertex(pos2, sf::Vector2f(ceilingTextureSize.x, 0)));
+                ceiling.append(sf::Vertex(pos3, sf::Vector2f(ceilingTextureSize.x, ceilingTextureSize.y)));
+                ceiling.append(sf::Vertex(pos4, sf::Vector2f(0, ceilingTextureSize.y)));
+            }
+        }
+    }
 
 }
 
 void World::InitGameObjects(GameObject *gameObject) {
-    for (int i = 0; i < objects.size(); ++i) {
+    for(int i = 0; i < objects.size(); ++i) {
         if(objects[i].type == "player") {
             gameObject->CreatePlayer(objects[i].position, objects[i].size, objects[i].texturePath);
         }
@@ -169,8 +224,23 @@ void World::InitGameObjects(GameObject *gameObject) {
         if(objects[i].type == "wall") {
             gameObject->CreateWall(objects[i].position, objects[i].size, objects[i].height, objects[i].angle, objects[i].texturePath);
         }
-
     }
+}
+
+sf::VertexArray World::GetFloor() {
+    return floor;
+}
+
+sf::VertexArray World::GetCeiling() {
+    return ceiling;
+}
+
+sf::RenderStates &World::GetFloorRenderState() {
+    return floorRenderState;
+}
+
+sf::RenderStates &World::GetCeilingRenderState() {
+    return ceilingRenderState;
 }
 
 bool World::isLoad() {
