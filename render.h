@@ -24,8 +24,10 @@ public:
     void Draw(std::vector <Surface> *surfaces);
     void Draw(Player *player);
     void Draw(std::vector <Wall> *walls);
+    void Draw(sf::RectangleShape object);
     void Draw(sf::Text text);
     void Draw(sf::ConvexShape object);
+    void Draw(sf::VertexArray vertex, sf::RenderStates *state);
     void Display();
 };
 

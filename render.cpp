@@ -49,12 +49,20 @@ void Render::Draw(std::vector <Wall> *walls) {
     }
 }
 
+void Render::Draw(sf::RectangleShape object) {
+    window->draw(object);
+}
+
 void Render::Draw(sf::Text text) {
     window->draw(text);
 }
 
 void Render::Draw(sf::ConvexShape object) {
     window->draw(object);
+}
+
+void Render::Draw(sf::VertexArray vertex, sf::RenderStates *state) {
+    window->draw(vertex, *state);
 }
 
 void Render::SetView(sf::View view) {
