@@ -7,46 +7,53 @@
 #include <vector>
 
 struct Surface {
- private:
-     sf::Vector2f pos1; //pos1 -- pos2
-     sf::Vector2f pos2; //pos4 -- pos3
-     sf::Vector2f pos3;
-     sf::Vector2f pos4;
+private:
+    sf::Vector2f pos1; //pos1 -- pos2
+    sf::Vector2f pos2; //pos4 -- pos3
+    sf::Vector2f pos3;
+    sf::Vector2f pos4;
 
-     sf::VertexArray  polygon;
-     std::string      texturePath;
-     sf::Texture      texture;
-     sf::RenderStates state;
- public:
-     Surface(sf::Vector2f pos1, sf::Vector2f pos2, sf::Vector2f pos3, sf::Vector2f pos4, std::string texturePath = "", sf::Color colorPos1Pos4 = sf::Color::White, sf::Color colorPos2Pos3 = sf::Color::Black) {
-         this->pos1 = pos1;
-         this->pos2 = pos2;
-         this->pos3 = pos3;
-         this->pos4 = pos4;
-         this->texturePath = texturePath;
+    sf::VertexArray  polygon;
+    std::string      texturePath;
+    sf::Texture      texture;
+    sf::RenderStates state;
+public:
+    Surface(sf::Vector2f pos1, sf::Vector2f pos2, sf::Vector2f pos3, sf::Vector2f pos4, std::string texturePath = "", sf::Color colorPos1Pos4 = sf::Color::Red, sf::Color colorPos2Pos3 = sf::Color::Red) {
+        this->pos1 = pos1;
+        this->pos2 = pos2;
+        this->pos3 = pos3;
+        this->pos4 = pos4;
+        this->texturePath = texturePath;
 
-         if(!texture.loadFromFile(texturePath)) {
-             std::cout << "error: cannot load file (PolygonCast)" << std::endl;
-         }
-         else {
-             state.texture = &texture;
-         }
+        polygon.setPrimitiveType(sf::PrimitiveType::Quads);
 
-         polygon.setPrimitiveType(sf::PrimitiveType::Quads);
-         polygon.append(sf::Vertex(pos1, colorPos1Pos4));
-         polygon.append(sf::Vertex(pos2, colorPos2Pos3));
-         polygon.append(sf::Vertex(pos3, colorPos2Pos3));
-         polygon.append(sf::Vertex(pos4, colorPos1Pos4));
-     };
+        if(!texture.loadFromFile(texturePath)) {
+            std::cout << "error: cannot load file (PolygonCast)" << std::endl;
 
-     sf::VertexArray &GetPolygon() {
-         return polygon;
-     };
+            polygon.append(sf::Vertex(pos1, colorPos1Pos4));
+            polygon.append(sf::Vertex(pos2, colorPos2Pos3));
+            polygon.append(sf::Vertex(pos3, colorPos2Pos3));
+            polygon.append(sf::Vertex(pos4, colorPos1Pos4));
+        }
+        else {
+            polygon.append(sf::Vertex(pos1, sf::Vector2f(0, 0)));
+            polygon.append(sf::Vertex(pos2, sf::Vector2f(100, 0)));
+            polygon.append(sf::Vertex(pos3, sf::Vector2f(100, 100)));
+            polygon.append(sf::Vertex(pos4, sf::Vector2f(0, 100)));
+        }
+    };
 
-     sf::RenderStates &GetRenderState() {
-         return state;
-     };
- };
+
+    sf::VertexArray &GetPolygon() {
+        return polygon;
+    };
+
+    sf::RenderStates GetRenderState() {
+        state.texture = &texture;
+
+        return state;
+    };
+};
 
  struct lineSegment {
      Toolkit::Vector2f_pair line;

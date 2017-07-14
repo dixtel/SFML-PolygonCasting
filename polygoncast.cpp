@@ -174,7 +174,6 @@ void PolygonCast::SortLineSegments(std::vector <lineSegment> *lines) {
                     }
                 }
             }
-
         }
     }
 }
