@@ -36,10 +36,11 @@ public:
             polygon.append(sf::Vertex(pos4, colorPos1Pos4));
         }
         else {
+            sf::Vector2f textureSize = sf::Vector2f(texture.getSize().x, texture.getSize().y);
             polygon.append(sf::Vertex(pos1, sf::Vector2f(0, 0)));
-            polygon.append(sf::Vertex(pos2, sf::Vector2f(100, 0)));
-            polygon.append(sf::Vertex(pos3, sf::Vector2f(100, 100)));
-            polygon.append(sf::Vertex(pos4, sf::Vector2f(0, 100)));
+            polygon.append(sf::Vertex(pos2, sf::Vector2f(textureSize.x, 0)));
+            polygon.append(sf::Vertex(pos3, sf::Vector2f(textureSize.x, textureSize.y)));
+            polygon.append(sf::Vertex(pos4, sf::Vector2f(0, textureSize.y)));
         }
     };
 
