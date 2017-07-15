@@ -20,6 +20,9 @@
 
  */
 
+float ToFloat(std::string number);
+sf::Vector2f ToFloats(std::string numbers);
+
 struct Object {
     std::string       type;
     std::string       texturePath;

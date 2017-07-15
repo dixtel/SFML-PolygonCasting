@@ -1,79 +1,17 @@
 #include "world.h"
 
-float GetX(std::string attribute) {
+float ToFloat(std::string number) {
     float x;
-    std::istringstream stream(attribute);
+    std::istringstream stream(number);
     stream >> x;
     return x;
 }
 
-sf::Vector2f GetXY(std::string attribute) {
-    float x;
-    float y;
-    std::string pos_x;
-    std::string pos_y;
+sf::Vector2f ToFloats(std::string numbers) {
+    std::string var1 = numbers.substr(0, numbers.find(","));
+    std::string var2 = numbers.substr(numbers.find(",") + 1, numbers.size() - 1);
 
-    attribute = attribute.replace(attribute.find(","), 1, " ");
-    std::istringstream stream(attribute);
-
-    stream >> pos_x;
-    if((pos_x.find(".")) != std::string::npos) {
-        std::istringstream stream;
-
-        float f_comma;
-        std::string s_comma = pos_x.substr(pos_x.find(".") + 1, pos_x.size() - pos_x.find("."));
-        stream.str(s_comma);
-        stream >> f_comma;
-
-        if(f_comma != 0) f_comma = f_comma / std::pow(10, s_comma.size());
-
-        /*
-         * Max 4 number after comma, otherwise result are not good
-         */
-
-        float f_decimal;
-        std::string s_decimal = pos_x.substr(0, pos_x.find(".") );
-        stream.clear();
-        stream.str(s_decimal);
-        stream >> f_decimal;
-
-        x = f_decimal + f_comma;
-    }
-    else {
-        std::istringstream stream(pos_x);
-        stream >> x;
-    }
-
-
-    stream >> pos_y;
-    if((pos_y.find(".")) != std::string::npos) {
-        std::istringstream stream;
-
-        float f_comma;
-        std::string s_comma = pos_y.substr(pos_y.find(".") + 1, pos_y.size() - pos_y.find("."));
-        stream.str(s_comma);
-        stream >> f_comma;
-
-        if(f_comma != 0) f_comma = f_comma / std::pow(10, s_comma.size());
-
-        /*
-         * Max 4 number after comma, otherwise result are not good
-         */
-
-        float f_decimal;
-        std::string s_decimal = pos_y.substr(0, pos_y.find(".") );
-        stream.clear();
-        stream.str(s_decimal);
-        stream >> f_decimal;
-
-        y = f_decimal + f_comma;
-    }
-    else {
-        std::istringstream stream(pos_y);
-        stream >> y;
-    }
-
-    return sf::Vector2f(x, y);
+    return sf::Vector2f(ToFloat(var1), ToFloat(var2));
 }
 
 World::World() {
@@ -125,22 +63,22 @@ void World::LoadMap(const std::string path) {
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "position") {
                 std::cout << "position found\n";
 
-                object.position = GetXY(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
+                object.position = ToFloats(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
             }
 
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "size") {
                 std::cout << "size found\n";
-                object.size = GetXY(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
+                object.size = ToFloats(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
             }
 
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "height") {
                 std::cout << "height found\n";
-                object.height = GetX(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
+                object.height = ToFloat(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
             }
 
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "angle") {
                 std::cout << "angle found\n";
-                object.angle = GetX(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
+                object.angle = ToFloat(object_attributes[j].substr(object_attributes[j].find(":") + 1, object_attributes[j].size() - 1));
             }
 
             if((object_attributes[j].substr(0, object_attributes[j].find(":"))) == "texturepath") {
@@ -150,7 +88,7 @@ void World::LoadMap(const std::string path) {
 
         }
 
-        //TODO fix wall y position
+        //TODO IN WORK fix wall y position
 
         objects.push_back(object);
         std::cout << "type: " << object.type               << std::endl
