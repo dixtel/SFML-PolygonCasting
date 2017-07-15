@@ -4,6 +4,6 @@ int main() {
     Game game;
     game.StartGameLoop();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
