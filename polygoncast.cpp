@@ -30,7 +30,7 @@ Surface PolygonCast::CalculateSurface(Toolkit::Vector2f_pair line, float distanc
 
 
     float viewSpace = distanceView*10;
-    float rayExtendSize = distanceView/3;
+    float rayExtendSize = distanceView*10;
 
     sf::Vector2f leftPointView  = sf::Vector2f(viewTriangle[1].x + (Toolkit::Cosine(Toolkit::GetAngle(viewTriangle[2], viewTriangle[1]))) * viewSpace, viewTriangle[1].y - (Toolkit::Sine(Toolkit::GetAngle(viewTriangle[2], viewTriangle[1]))) * viewSpace);
     sf::Vector2f rightPointView = sf::Vector2f(viewTriangle[2].x + (Toolkit::Cosine(Toolkit::GetAngle(viewTriangle[1], viewTriangle[2]))) * viewSpace, viewTriangle[2].y - (Toolkit::Sine(Toolkit::GetAngle(viewTriangle[1], viewTriangle[2]))) * viewSpace);
@@ -314,8 +314,6 @@ void PolygonCast::CreateSurfaces(std::vector <Wall> *walls) {
     //set surfaces from lines
     std::cout << linesSegmentsToDraw.size() << std::endl;
 
-    ClearSurfaces();
-
     for(int i = 0; i < linesSegmentsToDraw.size(); ++i) {
         Toolkit::Vector2f_pair line = linesSegmentsToDraw[i].line;
         float distanceToA = linesSegmentsToDraw[i].distance_A;
@@ -334,6 +332,7 @@ void PolygonCast::CreateView(Player *player, std::vector<Wall> *walls) {
 
     cameraPosition = sf::Vector2f((player->GetPosition().x + (player->GetSize().x/2)) + (Toolkit::Cosine(fmod(directionView + 180 ,360)) * (player->GetSize().y/2)), player->GetPosition().y + (player->GetSize().y/2) + (Toolkit::Cosine(fmod(directionView + 180 ,360)) * (player->GetSize().y/2)));
 
+    ClearSurfaces();
     CreateSurfaces(walls);
 }
 
