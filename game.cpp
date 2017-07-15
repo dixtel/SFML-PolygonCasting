@@ -130,8 +130,8 @@ void Game::StartGameLoop() {
 
 
         render->Clear();
-        render->Draw(world->GetCeiling(), &world->GetCeilingRenderState());
-        render->Draw(world->GetFloor(), &world->GetFloorRenderState());
+//        render->Draw(world->GetCeiling(), &world->GetCeilingRenderState());
+//        render->Draw(world->GetFloor(), &world->GetFloorRenderState());
         render->Draw(&polygonCast->GetSurfaces());
         render->SetView(minimap);
         render->Draw(gameObject->GetPlayer().GetPlayerView());
